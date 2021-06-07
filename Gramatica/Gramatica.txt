@@ -1,0 +1,309 @@
+###################################################
+###############     Simbolos       ################
+###################################################
+
+..............      Especiales      ...............
+
+    \n
+    \\
+    \"
+    \t
+    \'
+
+..............      Aritmeticos      ...............
+
+    +
+    -
+    *
+    /
+    **
+    %
+    =
+
+..............      Relacionales      ...............
+
+    ==
+    =!
+    <
+    >
+    <=
+    >=
+
+..............     Logicos      ...............
+
+    ||
+    &&
+    !
+
+..............     Agrupacion      ...............
+
+    (
+    )
+
+..............     Precedencia      ...............
+
+    NIVEL       OPERADOR                    ASOCIATIVIDAD
+    _____________________________________________________
+    0           -                           Derecha
+    1           **                          No asociativa
+    2           /, *, %                     Izquierda
+    3           +, -                        Izquierda
+    4           ==, =!, <, <=, >, >=        Izquierda
+    5           !                           Derecha
+    6           &&                          Izquierda
+    7           ||                          Izquierda
+
+..............     Finalizacion      ...............
+
+    ;           [Opcional]
+    {}          Encapsula sentencias
+
+..............     Arreglos      ...............
+
+    []
+..............     Control      ...............
+
+    :
+
+###################################################
+##############     Reservadas       ###############
+###################################################
+
+..............      Primitivos      ...............
+
+    int
+    double
+    boolean
+    char
+    string
+    null
+
+..............      Declaraciones      ...............
+
+    var         variables
+    new
+
+..............      Sentencias      ...............
+
+....    Control
+
+    if
+    else
+    else if
+    switch
+    case
+    default
+
+....    Ciclicas
+
+    while
+    for
+
+....    Transferencia
+
+    break
+    continue
+    return
+
+..............      Funciones      ...............
+
+    func
+    print
+    read
+    toLower
+    toUpper
+
+....    Nativas
+
+    length
+    truncate
+    round
+    typeOf
+    main
+
+reservadas = {
+..............      Primitivos      ...............
+    'int' : 'RINT',
+    'double' : 'RDOUBLE',
+    'boolean' : 'RBOOLEAN',
+    'char' : 'RCHAR',
+    'string' : 'RSTRING',
+    'null' : 'RNULL',
+..............      Declaraciones      ...............
+    'var' : 'RVAR',
+    'new' : 'RNEW',
+..............      Sentencias      ...............
+....    Control
+
+    'if' : 'RIF',
+    'else' : 'RELSE',
+    'else if' : 'RELSEIF',
+    'switch' : 'RSWITCH',
+    'case' : 'RCASE',
+    'default' : 'RDEFAULT',
+
+....    Ciclicas
+
+    'while' : 'RWHILE',
+    'for' : 'RFOR',
+
+....    Transferencia
+
+    'break' : 'RBREAK',
+    'continue' : 'RCONTINUE',
+    'return' : 'RRETURN'
+
+..............      Funciones      ...............
+
+    'func' : 'RFUNC',
+    'print' : 'RPRINT',
+    'read' : 'RREAD',
+    'toLower' : 'RTOLOWER',
+    'toUpper' : 'RTOUPPER',
+
+....    Nativas
+
+    'length' : 'RLENGTH',
+    'truncate' : 'RTRUNCATE',
+    'round' : 'RROUND',
+    'typeOf' : 'RTYPEOF',
+    'main' : 'RMAIN',
+}
+
+tokens = [
+    'PUNTOCOMA',            ;
+    'COMA',                 ,
+    'DOSPUNTOS',            :
+    'PARA',                 (
+    'PARC',                 )
+    'CORA',                 [
+    'CORC',                 ]
+    'LLAVEA',               {
+    'LLAVEC',               }
+    'MAS',                  +
+    'MENOS',                -
+    'POR',                  *
+    'DIV',                  /
+    'POTENCIA'              **
+    'MODULO'                %
+    'IGUAL'                 =
+    'IGUALDAD'              ==
+    'DIFERENTE'             =!
+    'MENORQUE'              <
+    'MAYORQUE'              >
+    'MENORIGUAL'            <=
+    'MAYORIGUAL'            >+
+    'OR'                    ||
+    'AND'                   &&
+    'NOT'                   !
+    'DECIMAL',
+    'ENTERO',
+    'CADENA',
+    'ID'
+] + list(reservadas.values())
+
+###################################################
+###############     Gramatica       ###############
+###################################################
+
+    inicio              :   declaraciones
+                        |   instrucciones
+                        |   funciones
+                        |   llamada
+
+    declaraciones       :   declaraciones declaracion
+
+    declaracion         :   'var' ID '=' expresion
+                        |   'var' ID
+
+    instrucciones       :   instrucciones instruccion
+
+    instruccion         :   imprimir_instr
+                        |   if_instr
+                        |   switch_case_instr
+                        |   while_instr
+                        |   for_instr
+                        |   read_instr
+                        |   tolower_instr
+                        |   toupper_instr
+                        |   length_instr
+                        |   truncate_instr
+                        |   round_instr
+                        |   typeof_instr
+                        |   main_instr
+                        |   '('tipo')' expresion
+                        |   ID '+''+'
+                        |   ID '-''-'
+                        |   error_instr
+
+    imprimir_instr      :   RPRINT PARA expresion PARC PUNTOCOMA
+
+    read_instr          :   RREAD PARA PARC PUNTOCOMA
+
+    tolower_instr       :   RTOLOWER PARA expresion PARC PUNTOCOMA
+
+    toupper_instr       :   RTOUPPER PARA expresion PARC PUNTOCOMA
+
+    main_instr          :   RMAIN PARA PARC
+                            LLAVEA instrucciones LLAVEC PUNTOCOMA
+
+    length_instr        :   RLENGTH PARA expresion PARC PUNTOCOMA
+
+    truncate_instr      :   RTRUNCATE PARA valor PARC PUNTOCOMA
+
+    round_instr         :   RROUND PARA valor PARC PUNTOCOMA
+
+    typeof_instr        :   RTYPEOF PARA valor PARC PUNTOCOMA
+
+    if_instr            :   RIF PARA expresion PARC
+                            LLAVEA instrucciones LLAVEC
+                        |   RIF PARA expresion PARC
+                            LLAVEA instrucciones LLAVEC
+                            RELSE LLAVEA instrucciones LLAVEC
+                        |   RIF PARA expresion PARC
+                            LLAVEA instrucciones LLAVEC
+                            RELSE if_instr
+
+    switch_case_instr   :   RSWITCH PARA expresiones PARC
+                            LLAVEA cases_list default LLAVEC
+                        |   RSWITCH PARA expresiones PARC
+                            LLAVEA cases_list LLAVEC
+                        |   RSWITCH PARA expresiones PARC
+                            LLAVEA default LLAVEC
+
+    cases_list          :   RCASE expresion DOSPUNTOS
+                            instrucciones
+
+    default             :   RDEFAULT DOSPUNTOS
+                            instrucciones
+
+    while_instr         :   RWHILE PARA expresion PARC
+                            LLAVE instrucciones LLAVEC
+
+    for_instr           :   RFOR PARA declaracion PUNTOCOMA condicion PUNTOCOMA actualizacion PARC
+                            LLAVE instrucciones LLAVEC
+
+    funciones           :   RFUNC ID PARA parametros PARC
+                            LLAVEA instrucciones LLAVEC
+
+    parametros          :   parametros COMA tipo [] ID
+                        |   tipo [] ID
+
+    llamada             :   ID PARA parametros_llamada PARC
+                        |   ID PARA PARC
+
+    parametros_llamada  :   parametros_llamada COMA expresion
+                        |   expresion
+
+    expresion           :   expresion MAS expresion
+                        |   expresion MENOS expresion
+                        |   expresion MULTIPLICACION expresion
+                        |   expresion DIVISION expresion
+                        |   UMENOS expresion
+                        |   expresion POTENCIA
+
+    tipo                :   RINT
+                        |   RDOUBLE
+                        |   RBOOLEAN
+                        |   RCHAR
+                        |   RSTRING
