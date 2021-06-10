@@ -45,11 +45,14 @@ tokens = [
     'MENOS',
     'POR',
     'DIV',
+    'POT',
+    'MOD',
     'MENORQUE',
     'MAYORQUE',
     'MENORIGUAL',
     'MAYORIGUAL',
     'IGUALIGUAL',
+    'DIFERENTE',
     'IGUAL',
     'AND',
     'OR',
@@ -72,11 +75,14 @@ t_MAS           = r'\+'
 t_MENOS         = r'-'
 t_POR           = r'\*'
 t_DIV           = r'/'
+t_POT           = r'**'
+t_MOD           = r'%'
 t_MENORQUE      = r'<'
 t_MAYORQUE      = r'>'
 t_MENORIGUAL    = r'<='
 t_MAYORIGUAL    = r'>='
 t_IGUALIGUAL    = r'=='
+t_DIFERENTE     = r'=!'
 t_IGUAL         = r'='
 t_AND           = r'&&'
 t_OR            = r'\|\|'
@@ -145,8 +151,10 @@ precedence = (
     ('left', 'OR'),
     ('left', 'AND'),
     ('left', 'UNOT'),
-    ('left', 'MENORQUE', 'MAYORQUE', 'IGUALIGUAL'),
+    ('left', 'MAYORIGUAL', 'MAYORQUE', 'MENORIGUAL', 'MENORQUE', 'DIFERENTE', 'IGUALIGUAL'),
     ('left', 'MAS', 'MENOS'),
+    ('left', 'MOD', 'POR', 'DIV'),
+    ('', 'POT'),
     ('right', 'UMENOS'),
 )
 
@@ -264,7 +272,10 @@ def p_expresion_binaria(t):
                         | expresion MENOS expresion
                         | expresion MENORQUE expresion
                         | expresion MAYORQUE expresion
+                        | expresion MENORIGUAL expresion
+                        | expresion MAYORIGUAL expresion
                         | expresion IGUALIGUAL expresion
+                        | expresion DIFERENTE expresion
                         | expresion AND expresion
                         | expresion OR expresion
     '''
@@ -277,8 +288,14 @@ def p_expresion_binaria(t):
         t[0] = Relacional(OperadorRelacional.MENORQUE, t[1], t[3], t.lineno(2), find_column(input, t.slice[2]))
     if t[2] == '>':
         t[0] = Relacional(OperadorRelacional.MAYORQUE, t[1], t[3], t.lineno(2), find_column(input, t.slice[2]))
+    if t[2] == '<=':
+        t[0] = Relacional(OperadorRelacional.MENORIGUAL, t[1], t[3], t.lineno(2), find_column(input, t.slice[2]))
+    if t[2] == '>=':
+        t[0] = Relacional(OperadorRelacional.MAYORIGUAL, t[1], t[3], t.lineno(2), find_column(input, t.slice[2]))
     if t[2] == '==':
         t[0] = Relacional(OperadorRelacional.IGUALIGUAL, t[1], t[3], t.lineno(2), find_column(input, t.slice[2]))
+    if t[2] == '=!':
+        t[0] = Relacional(OperadorRelacional.DIFERENTE, t[1], t[3], t.lineno(2), find_column(input, t.slice[2]))
     elif t[2] == '&&':
         t[0] = Logica(OperadorLogico.AND, t[1], t[3], t.lineno(2), find_column(input, t.slice[2]))
     elif t[2] == '||':
