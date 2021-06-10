@@ -16,7 +16,7 @@ class Aritmetica(Instruccion):
         if isinstance(izq, Excepcion): return izq
         if self.OperacionDer != None:
             der = self.OperacionDer.interpretar(tree, table)
-        if isinstance(der, Excepcion): return der
+            if isinstance(der, Excepcion): return der
 
         if self.operador == OperadorAritmetico.MAS: # SUMA
             if self.OperacionIzq.tipo == TIPO.ENTERO and self.OperacionDer.tipo == TIPO.ENTERO:
@@ -28,6 +28,9 @@ class Aritmetica(Instruccion):
             elif self.OperacionIzq.tipo == TIPO.ENTERO and self.OperacionDer.tipo == TIPO.CADENA:
                 self.tipo = TIPO.CADENA
                 return str(self.obtenerVal(self.OperacionIzq.tipo, izq)) + self.obtenerVal(self.OperacionDer.tipo, der)
+            elif self.OperacionIzq.tipo == TIPO.CADENA and self.OperacionDer.tipo == TIPO.CADENA:
+                self.tipo = TIPO.CADENA
+                return self.obtenerVal(self.OperacionIzq.tipo, izq) + self.obtenerVal(self.OperacionDer.tipo, der)
             elif self.OperacionIzq.tipo == TIPO.ENTERO and self.OperacionDer.tipo == TIPO.BOOLEANO:
                 self.tipo = TIPO.ENTERO
                 return str(self.obtenerVal(self.OperacionIzq.tipo, izq)) + self.obtenerVal(self.OperacionDer.tipo, der)
