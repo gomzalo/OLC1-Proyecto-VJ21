@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='utf-8'?>
+<interface version="1.1">
+  <object class="tk.Toplevel" id="mainwindow">
+    <property name="height">200</property>
+    <property name="resizable">both</property>
+    <property name="title" translatable="yes">Hello World App</property>
+    <property name="width">400</property>
+    <child>
+      <object class="ttk.Frame" id="MenuBar">
+        <property name="borderwidth">0</property>
+        <property name="height">10</property>
+        <property name="padding">1</property>
+        <property name="relief">flat</property>
+        <property name="width">0</property>
+        <layout manager="grid">
+          <property name="column">0</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+          <property name="sticky">nw</property>
+          <property type="col" id="0" name="weight">10</property>
+        </layout>
+        <child>
+          <object class="ttk.Menubutton" id="Archivo">
+            <property name="text" translatable="yes">Archivo</property>
+            <layout manager="grid">
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+              <property name="sticky">n</property>
+              <property type="row" id="0" name="uniform">1</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Menubutton" id="Herramientas">
+            <property name="text" translatable="yes">Herramientas</property>
+            <layout manager="grid">
+              <property name="column">1</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+              <property name="sticky">n</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Menubutton" id="Reportes">
+            <property name="text" translatable="yes">Reportes</property>
+            <layout manager="grid">
+              <property name="column">2</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Frame" id="frame1">
+        <property name="borderwidth">200</property>
+        <property name="height">300</property>
+        <property name="padding">200</property>
+        <property name="width">150</property>
+        <layout manager="grid">
+          <property name="column">0</property>
+          <property name="propagate">True</property>
+          <property name="row">1</property>
+          <property name="sticky">nw</property>
+          <property type="col" id="0" name="weight">10</property>
+        </layout>
+        <child>
+          <object class="tk.Text" id="text2">
+            <property name="height">20</property>
+            <property name="padx">0</property>
+            <property name="pady">0</property>
+            <property name="text" translatable="yes">text2</property>
+            <property name="width">50</property>
+            <layout manager="grid">
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+              <property name="sticky">nw</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

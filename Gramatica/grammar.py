@@ -29,8 +29,15 @@ reservadas = {
     'print'     : 'RPRINT',
     'if'        : 'RIF',
     'else'      : 'RELSE',
+    'while'     : 'RWHILE',
     'true'      : 'RTRUE',
     'false'     : 'RFALSE',
+    'var'       : 'RVAR',
+    'null'      : 'RNULL',
+    'break'     : 'RBREAK',
+    'continue'  : 'RCONTINUE',
+    'main'      : 'RMAIN',
+    'func'      : 'RFUNC'
 }
 
 tokens = [
@@ -41,6 +48,7 @@ tokens = [
     'CORC',
     'LLAVEA',
     'LLAVEC',
+    'COMA',
     'MAS',
     'MENOS',
     'POR',
@@ -60,6 +68,7 @@ tokens = [
     'DECIMAL',
     'ENTERO',
     'CADENA',
+    'NULO',
     'ID'
 ] + list(reservadas.values())
 
@@ -71,11 +80,12 @@ t_CORA          = r'\['
 t_CORC          = r'\]'
 t_LLAVEA        = r'\{'
 t_LLAVEC        = r'\}'
+t_COMA          = r','
 t_MAS           = r'\+'
 t_MENOS         = r'-'
 t_POR           = r'\*'
 t_DIV           = r'/'
-t_POT           = r'**'
+t_POT           = r'\*\*'
 t_MOD           = r'%'
 t_MENORQUE      = r'<'
 t_MAYORQUE      = r'>'
@@ -114,8 +124,9 @@ def t_ID(t):
     return t
 
 def t_CADENA(t):
-    r'(\".*?\")'
+    r'(\".*(\\")*?\")'
     t.value = t.value[1:-1] # Removiendo comillas
+    t.value = t.value.replace("\\", "") # Removiendo barra
     return t
 
 # Comentario simple // ...
@@ -125,7 +136,7 @@ def t_COMENTARIO_SIMPLE(t):
 
 # -------------     Caracteres ignorados        -------------
 
-t_ignore = "\t"
+t_ignore = " \t"
 
 def t_newline(t):
     r'\n+'
@@ -154,7 +165,7 @@ precedence = (
     ('left', 'MAYORIGUAL', 'MAYORQUE', 'MENORIGUAL', 'MENORQUE', 'DIFERENTE', 'IGUALIGUAL'),
     ('left', 'MAS', 'MENOS'),
     ('left', 'MOD', 'POR', 'DIV'),
-    ('', 'POT'),
+    ('nonassoc', 'POT'),
     ('right', 'UMENOS'),
 )
 
@@ -173,6 +184,12 @@ from Instrucciones.Declaracion import Declaracion
 from Expresiones.Identificador import Identificador
 from Instrucciones.Asignacion import Asignacion
 from Instrucciones.If import If
+from Instrucciones.While import While
+from Instrucciones.Break import Break
+from Instrucciones.Continue import Continue
+from Instrucciones.Main import Main
+from Instrucciones.Funcion import Funcion
+from Instrucciones.Llamada import Llamada
 
 # -------------     Definicion de la gramatica      -------------
 
@@ -208,6 +225,12 @@ def p_instruccion(t):
                         | declaracion_instr terminacion
                         | asignacion_instr terminacion
                         | if_instr
+                        | while_instr
+                        | break_instr terminacion
+                        | continue_instr terminacion
+                        | main_instr
+                        | funcion_instr
+                        | llamada_instr terminacion
                         '''
     t[0] = t[1]
 
@@ -224,8 +247,9 @@ def p_imprimir(t):
 #///////////////////////////////////////DECLARACION//////////////////////////////////////////////////
 
 def p_declaracion(t) :
-    'declaracion_instr     : tipo ID IGUAL expresion'
-    t[0] = Declaracion(t[1], t[2], t.lineno(2), find_column(input, t.slice[2]), t[4])
+    'declaracion_instr     : RVAR ID IGUAL expresion'
+    t[0] = Declaracion(t[2], t.lineno(2), find_column(input, t.slice[2]), t[4])
+    # t[0] = Declaracion(t[1], t[2], t.lineno(2), find_column(input, t.slice[2]), t[4])
 
 #///////////////////////////////////////ASIGNACION//////////////////////////////////////////////////
 
@@ -246,6 +270,42 @@ def p_if2(t) :
 def p_if3(t) :
     'if_instr     : RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE if_instr'
     t[0] = If(t[3], t[6], None, t[9], t.lineno(1), find_column(input, t.slice[1]))
+#///////////////////////////////////////WHILE//////////////////////////////////////////////////
+
+def p_while(t) :
+    'while_instr     : RWHILE PARA expresion PARC LLAVEA instrucciones LLAVEC'
+    t[0] = While(t[3], t[6], t.lineno(1), find_column(input, t.slice[1]))
+
+#///////////////////////////////////////BREAK//////////////////////////////////////////////////
+
+def p_break(t) :
+    'break_instr     : RBREAK'
+    t[0] = Break(t.lineno(1), find_column(input, t.slice[1]))
+
+#///////////////////////////////////////CONTINUE//////////////////////////////////////////////////
+
+def p_continue(t) :
+    'continue_instr     : RCONTINUE'
+    t[0] = Continue(t.lineno(1), find_column(input, t.slice[1]))
+
+#///////////////////////////////////////MAIN//////////////////////////////////////////////////
+
+def p_main(t) :
+    'main_instr     : RMAIN PARA PARC LLAVEA instrucciones LLAVEC'
+    t[0] = Main(t[5], t.lineno(1), find_column(input, t.slice[1]))
+
+
+#///////////////////////////////////////FUNCION//////////////////////////////////////////////////
+
+def p_funcion(t) :
+    'funcion_instr     : RFUNC ID PARA PARC LLAVEA instrucciones LLAVEC'
+    t[0] = Funcion(t[2], t[6], t.lineno(1), find_column(input, t.slice[1]))
+
+#///////////////////////////////////////LLAMADA A FUNCION//////////////////////////////////////////////////
+
+def p_llamada(t) :
+    'llamada_instr     : ID PARA PARC'
+    t[0] = Llamada(t[1], t.lineno(1), find_column(input, t.slice[1]))
 
 #///////////////////////////////////////TIPO//////////////////////////////////////////////////
 
@@ -312,7 +372,7 @@ def p_expresion_unaria(t):
     elif t[1] == '!':
         t[0] = Logica(OperadorLogico.NOT, t[2], None, t.lineno(1), find_column(input, t.slice[1]))
 
-def p_expresion_agrupar(t):
+def p_expresion_agrupacion(t):
     '''
     expresion           : PARA expresion PARC
     '''
@@ -326,19 +386,19 @@ def p_expresion_entero(t):
     '''expresion        : ENTERO'''
     t[0] = Primitivos(TIPO.ENTERO, t[1], t.lineno(1), find_column(input, t.slice[1]))
 
-def p_primitivo_decimal(t):
+def p_expresion_decimal(t):
     '''expresion        : DECIMAL'''
     t[0] = Primitivos(TIPO.DECIMAL, t[1], t.lineno(1), find_column(input, t.slice[1]))
 
-def p_primitivo_cadena(t):
+def p_expresion_cadena(t):
     '''expresion        : CADENA'''
     t[0] = Primitivos(TIPO.CADENA, str(t[1]).replace('\\n', '\n'), t.lineno(1), find_column(input, t.slice[1]))
 
-def p_primitivo_true(t):
+def p_expresion_true(t):
     '''expresion : RTRUE'''
     t[0] = Primitivos(TIPO.BOOLEANO, True, t.lineno(1), find_column(input, t.slice[1]))
 
-def p_primitivo_false(t):
+def p_expresion_false(t):
     '''expresion : RFALSE'''
     t[0] = Primitivos(TIPO.BOOLEANO, False, t.lineno(1), find_column(input, t.slice[1]))
 
@@ -363,24 +423,55 @@ def parse(inp):
 
 # INTERFAZ
 
-f = open("../entrada.txt", "r")
+f = open("./entrada.txt", "r")
 entrada = f.read()
 
 from TS.Arbol import Arbol
 from TS.TablaSimbolos import TablaSimbolos
 
-instrucciones = parse(entrada.lower()) #ARBOL AST
+instrucciones = parse(entrada.lower()) # ARBOL AST
 ast = Arbol(instrucciones)
 TSGlobal = TablaSimbolos()
 ast.setTSglobal(TSGlobal)
-for error in errores:                   #CAPTURA DE ERRORES LEXICOS Y SINTACTICOS
+for error in errores:                   # CAPTURA DE ERRORES LEXICOS Y SINTACTICOS
     ast.getExcepciones().append(error)
     ast.updateConsola(error.toString())
 
-for instruccion in ast.getInstrucciones():      # REALIZAR LAS ACCIONES
-    value = instruccion.interpretar(ast,TSGlobal)
-    if isinstance(value, Excepcion) :
-        ast.getExcepciones().append(value)
-        ast.updateConsola(value.toString())
+for instruccion in ast.getInstrucciones():      # 1RA PASADA (Declaraciones y asignaciones)
+    if isinstance(instruccion, Funcion):
+        ast.addFuncion(instruccion)  # GUARDAR LA FUNCION EN "MEMORIA" (EN EL ARBOL)
+    if isinstance(instruccion, Declaracion) or isinstance(instruccion, Asignacion):
+        value = instruccion.interpretar(ast,TSGlobal)
+        if isinstance(value, Excepcion) :
+            ast.getExcepciones().append(value)
+            ast.updateConsola(value.toString())
+        if isinstance(value, Break):
+            err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", instruccion.fila, instruccion.columna)
+            ast.getExcepciones().append(err)
+            ast.updateConsola(err.toString())
+
+for instruccion in ast.getInstrucciones():      # 2DA PASADA (Main)
+    contador = 0
+    if isinstance(instruccion, Main):
+        contador += 1
+        if contador == 2:   # Verificando la duplicidad
+            err = Excepcion("Semantico", "Se encontraron 2 funciones Main.", instruccion.fila, instruccion.columna)
+            ast.getExcepciones().append(err)
+            ast.updateConsola(err.toString())
+            break
+        value = instruccion.interpretar(ast, TSGlobal)
+        if isinstance(value, Excepcion):
+            ast.getExcepciones().append(value)
+            ast.updateConsola(value.toString())
+        if isinstance(value, Break):
+            err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", instruccion.fila, instruccion.columna)
+            ast.getExcepciones().append(err)
+            ast.updateConsola(err.toString())
+
+for instruccion in ast.getInstrucciones():    # 3ERA PASADA (SENTENCIAS FUERA DE MAIN)
+    if not (isinstance(instruccion, Main) or isinstance(instruccion, Declaracion) or isinstance(instruccion, Asignacion)):
+        err = Excepcion("Semantico", "¡Sentencias fuera de función Main!", instruccion.fila, instruccion.columna)
+        ast.getExcepciones().append(err)
+        ast.updateConsola(err.toString())
 
 print(ast.getConsola())
