@@ -14,6 +14,7 @@ class Main(Instruccion):
         nuevaTabla = TablaSimbolos(table)
         for instruccion in self.instrucciones:  # Realizar acciones
             value = instruccion.interpretar(tree, nuevaTabla)
+            # print("MAIN", value)
             if isinstance(value, Excepcion):
                 tree.getExcepciones().append(value)
                 tree.updateConsola(value.toString())

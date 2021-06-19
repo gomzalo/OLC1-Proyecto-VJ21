@@ -101,6 +101,14 @@ main(){
     print(10*5)
     print(10**5)
     print(10%5)
+
+    var edad = 11;
+    print("edad: " + edad)
+    switch(edad){
+        default:
+            print("No se que edad tengo xd.");
+            break;
+    }
 }
 
 func HolaMundo2(){

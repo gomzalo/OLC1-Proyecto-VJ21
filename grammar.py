@@ -37,9 +37,9 @@ reservadas = {
     'null'      : 'RNULL',
     'break'     : 'RBREAK',
     'continue'  : 'RCONTINUE',
-    # 'switch'    : 'RSWITCH',
-    # 'case'      : 'RCASE',
-    # 'default'   : 'RDEFAULT',
+    'switch'    : 'RSWITCH',
+    'case'      : 'RCASE',
+    'default'   : 'RDEFAULT',
     'main'      : 'RMAIN',
     'func'      : 'RFUNC'
 }
@@ -205,8 +205,8 @@ from Instrucciones.Funcion import Funcion
 from Instrucciones.Llamada import Llamada
 from Instrucciones.Incremento import Incremento
 from Instrucciones.Decremento import Decremento
-# from Instrucciones.Switch import Switch
-# from Instrucciones.Case import Case
+from Instrucciones.Switch import Switch
+from Instrucciones.Case import Case
 
 # -------------     Definicion de la gramatica      -------------
 
@@ -242,6 +242,7 @@ def p_instruccion(t):
                         | declaracion_instr terminacion
                         | asignacion_instr terminacion
                         | if_instr
+                        | switch_instr
                         | while_instr
                         | for_instr
                         | break_instr terminacion
@@ -306,38 +307,38 @@ def p_if_3(t) :
     
 #///////////////////////////////////////SWITCH//////////////////////////////////////////////////
 
-# def p_switch_1(t) :
-#     'switch_instr     : RSWITCH PARA expresion PARC LLAVEA cases_list default LLAVEC'
-#     t[0] = Switch(t[3], t[6], None, t[7], t.lineno(1), find_column(input, t.slice[1]))
+def p_switch_1(t) :
+    'switch_instr     : RSWITCH PARA expresion PARC LLAVEA cases_list default LLAVEC'
+    t[0] = Switch(t[3], t[6], None, t[7], t.lineno(1), find_column(input, t.slice[1]))
 
-# def p_switch_2(t) :
-#     'switch_instr     : RSWITCH PARA expresion PARC LLAVEA cases_list LLAVEC'
-#     t[0] = Switch(t[3], None, t[6], None, t.lineno(1), find_column(input, t.slice[1]))
+def p_switch_2(t) :
+    'switch_instr     : RSWITCH PARA expresion PARC LLAVEA cases_list LLAVEC'
+    t[0] = Switch(t[3], None, t[6], None, t.lineno(1), find_column(input, t.slice[1]))
 
-# def p_switch_3(t) :
-#     'switch_instr     : RSWITCH PARA expresion PARC LLAVEA default LLAVEC'
-#     t[0] = Switch(t[3], None, None, t[7], t.lineno(1), find_column(input, t.slice[1]))
+def p_switch_3(t) :
+    'switch_instr     : RSWITCH PARA expresion PARC LLAVEA default LLAVEC'
+    t[0] = Switch(t[3], None, None, t[6], t.lineno(1), find_column(input, t.slice[1]))
 
-# def p_cases_list_cases_list_case(t):
-#     'cases_list       : cases_list case'
-#     if t[2] != "":
-#         t[1].append(t[2])
-#     t[0] = t[1]
+def p_cases_list_cases_list_case(t):
+    'cases_list       : cases_list case'
+    if t[2] != "":
+        t[1].append(t[2])
+    t[0] = t[1]
     
-# def p_cases_list_case(t):
-#     'cases_list       : case'
-#     if t[1] == "":
-#         t[0] = []
-#     else:
-#         t[0] = [t[1]]
+def p_cases_list_case(t):
+    'cases_list       : case'
+    if t[1] == "":
+        t[0] = []
+    else:
+        t[0] = [t[1]]
         
-# def p_case(t):
-#     'case             : RCASE expresion DOSPUNTOS instrucciones'
-#     t[0] = Case(t[2], t[4], t.lineno(1), find_column(input, t.slice[1]))
+def p_case(t):
+    'case             : RCASE expresion DOSPUNTOS instrucciones'
+    t[0] = Case(t[2], t[4], t.lineno(1), find_column(input, t.slice[1]))
     
-# def p_default(t):
-#     'default          : RDEFAULT DOSPUNTOS instrucciones'
-#     t[0] = t[3]
+def p_default(t):
+    'default          : RDEFAULT DOSPUNTOS instrucciones'
+    t[0] = t[3]
     
 #///////////////////////////////////////WHILE//////////////////////////////////////////////////
 
