@@ -51,6 +51,8 @@ tokens = [
     'COMA',
     'MAS',
     'MENOS',
+    'MASMAS',
+    'MENOSMENOS',
     'POR',
     'DIV',
     'POT',
@@ -83,6 +85,8 @@ t_LLAVEC        = r'\}'
 t_COMA          = r','
 t_MAS           = r'\+'
 t_MENOS         = r'-'
+t_MASMAS        = r'\+\+'
+t_MENOSMENOS    = r'--'
 t_POR           = r'\*'
 t_DIV           = r'/'
 t_POT           = r'\*\*'
@@ -167,6 +171,8 @@ precedence = (
     ('left', 'MOD', 'POR', 'DIV'),
     ('nonassoc', 'POT'),
     ('right', 'UMENOS'),
+    ('right', 'UMASMAS'),
+    ('right', 'UMENOSMENOS'),
 )
 
 # ********************************************************
@@ -190,6 +196,8 @@ from Instrucciones.Continue import Continue
 from Instrucciones.Main import Main
 from Instrucciones.Funcion import Funcion
 from Instrucciones.Llamada import Llamada
+from Instrucciones.Incremento import Incremento
+from Instrucciones.Decremento import Decremento
 
 # -------------     Definicion de la gramatica      -------------
 
@@ -231,6 +239,8 @@ def p_instruccion(t):
                         | main_instr
                         | funcion_instr
                         | llamada_instr terminacion
+                        | incremento_instr terminacion
+                        | decremento_instr terminacion
                         '''
     t[0] = t[1]
 
@@ -256,6 +266,19 @@ def p_declaracion(t) :
 def p_asignacion(t) :
     'asignacion_instr     : ID IGUAL expresion'
     t[0] = Asignacion(t[1], t[3], t.lineno(1), find_column(input, t.slice[1]))
+
+#///////////////////////////////////////INCREMENTO//////////////////////////////////////////////////
+
+def p_incremento(t) :
+    'incremento_instr     : ID MASMAS'
+    t[0] = Incremento(t[1], t.lineno(1), find_column(input, t.slice[1]))
+
+#///////////////////////////////////////DECREMENTO//////////////////////////////////////////////////
+
+def p_decremento(t) :
+    'decremento_instr     : ID MENOSMENOS'
+    t[0] = Decremento(t[1], t.lineno(1), find_column(input, t.slice[1]))
+
 
 #///////////////////////////////////////IF//////////////////////////////////////////////////
 
@@ -365,12 +388,18 @@ def p_expresion_unaria(t):
     '''
     expresion           : MENOS expresion %prec UMENOS
                         | NOT expresion %prec UNOT
+                        | expresion MENOSMENOS %prec UMENOSMENOS
+                        | expresion MASMAS %prec UMASMAS
     '''
 
     if t[1] == '-':
         t[0] = Aritmetica(OperadorAritmetico.UMENOS, t[2], None, t.lineno(1), find_column(input, t.slice[1]))
     elif t[1] == '!':
         t[0] = Logica(OperadorLogico.NOT, t[2], None, t.lineno(1), find_column(input, t.slice[1]))
+    elif t[1] == '++':
+        t[0] = Aritmetica(OperadorAritmetico.MASMAS, t[1], None, t.lineno(1), find_column(input, t.slice[1]))
+    elif t[1] == '--':
+        t[0] = Aritmetica(OperadorAritmetico.MENOSMENOS, t[1], None, t.lineno(1), find_column(input, t.slice[1]))
 
 def p_expresion_agrupacion(t):
     '''

@@ -5,6 +5,9 @@ func HolaMundo(){
 
 main(){
     HolaMundo();
+    valor1++;
+    valor1--;
+    valor1--;
     print(valor1);
     HolaMundo2();
     print(valor1);
