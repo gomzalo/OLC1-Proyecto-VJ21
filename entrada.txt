@@ -89,6 +89,11 @@ main(){
         num = num + 1;
         print(num);
     }
+    # Probando FOR
+    for(var i=0; i<4; i++){
+        print("");
+        print("FOR -> " + (i))
+    }
 }
 
 func HolaMundo2(){

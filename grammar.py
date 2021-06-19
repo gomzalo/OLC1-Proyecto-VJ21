@@ -30,18 +30,23 @@ reservadas = {
     'if'        : 'RIF',
     'else'      : 'RELSE',
     'while'     : 'RWHILE',
+    'for'       : 'RFOR',
     'true'      : 'RTRUE',
     'false'     : 'RFALSE',
     'var'       : 'RVAR',
     'null'      : 'RNULL',
     'break'     : 'RBREAK',
     'continue'  : 'RCONTINUE',
+    # 'switch'    : 'RSWITCH',
+    # 'case'      : 'RCASE',
+    # 'default'   : 'RDEFAULT',
     'main'      : 'RMAIN',
     'func'      : 'RFUNC'
 }
 
 tokens = [
     'PUNTOCOMA',
+    'DOSPUNTOS',
     'PARA',
     'PARC',
     'CORA',
@@ -102,6 +107,7 @@ t_AND           = r'&&'
 t_OR            = r'\|\|'
 t_NOT           = r'!'
 t_PUNTOCOMA     = r';'
+t_DOSPUNTOS     = r':'
 
 
 def t_DECIMAL(t):
@@ -191,6 +197,7 @@ from Expresiones.Identificador import Identificador
 from Instrucciones.Asignacion import Asignacion
 from Instrucciones.If import If
 from Instrucciones.While import While
+from Instrucciones.For import For
 from Instrucciones.Break import Break
 from Instrucciones.Continue import Continue
 from Instrucciones.Main import Main
@@ -198,6 +205,8 @@ from Instrucciones.Funcion import Funcion
 from Instrucciones.Llamada import Llamada
 from Instrucciones.Incremento import Incremento
 from Instrucciones.Decremento import Decremento
+# from Instrucciones.Switch import Switch
+# from Instrucciones.Case import Case
 
 # -------------     Definicion de la gramatica      -------------
 
@@ -234,6 +243,7 @@ def p_instruccion(t):
                         | asignacion_instr terminacion
                         | if_instr
                         | while_instr
+                        | for_instr
                         | break_instr terminacion
                         | continue_instr terminacion
                         | main_instr
@@ -282,23 +292,84 @@ def p_decremento(t) :
 
 #///////////////////////////////////////IF//////////////////////////////////////////////////
 
-def p_if1(t) :
+def p_if_1(t) :
     'if_instr     : RIF PARA expresion PARC LLAVEA instrucciones LLAVEC'
     t[0] = If(t[3], t[6], None, None, t.lineno(1), find_column(input, t.slice[1]))
 
-def p_if2(t) :
+def p_if_2(t) :
     'if_instr     : RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE LLAVEA instrucciones LLAVEC'
     t[0] = If(t[3], t[6], t[10], None, t.lineno(1), find_column(input, t.slice[1]))
 
-def p_if3(t) :
+def p_if_3(t) :
     'if_instr     : RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE if_instr'
     t[0] = If(t[3], t[6], None, t[9], t.lineno(1), find_column(input, t.slice[1]))
+    
+#///////////////////////////////////////SWITCH//////////////////////////////////////////////////
+
+# def p_switch_1(t) :
+#     'switch_instr     : RSWITCH PARA expresion PARC LLAVEA cases_list default LLAVEC'
+#     t[0] = Switch(t[3], t[6], None, t[7], t.lineno(1), find_column(input, t.slice[1]))
+
+# def p_switch_2(t) :
+#     'switch_instr     : RSWITCH PARA expresion PARC LLAVEA cases_list LLAVEC'
+#     t[0] = Switch(t[3], None, t[6], None, t.lineno(1), find_column(input, t.slice[1]))
+
+# def p_switch_3(t) :
+#     'switch_instr     : RSWITCH PARA expresion PARC LLAVEA default LLAVEC'
+#     t[0] = Switch(t[3], None, None, t[7], t.lineno(1), find_column(input, t.slice[1]))
+
+# def p_cases_list_cases_list_case(t):
+#     'cases_list       : cases_list case'
+#     if t[2] != "":
+#         t[1].append(t[2])
+#     t[0] = t[1]
+    
+# def p_cases_list_case(t):
+#     'cases_list       : case'
+#     if t[1] == "":
+#         t[0] = []
+#     else:
+#         t[0] = [t[1]]
+        
+# def p_case(t):
+#     'case             : RCASE expresion DOSPUNTOS instrucciones'
+#     t[0] = Case(t[2], t[4], t.lineno(1), find_column(input, t.slice[1]))
+    
+# def p_default(t):
+#     'default          : RDEFAULT DOSPUNTOS instrucciones'
+#     t[0] = t[3]
+    
 #///////////////////////////////////////WHILE//////////////////////////////////////////////////
 
 def p_while(t) :
     'while_instr     : RWHILE PARA expresion PARC LLAVEA instrucciones LLAVEC'
     t[0] = While(t[3], t[6], t.lineno(1), find_column(input, t.slice[1]))
 
+#///////////////////////////////////////FOR//////////////////////////////////////////////////
+
+def p_for(t) :
+    'for_instr     : RFOR PARA declaracion_asignacion PUNTOCOMA expresion PUNTOCOMA actualizacion PARC LLAVEA instrucciones LLAVEC'
+    t[0] = For(t[3], t[5], t[7], t[10], t.lineno(1), find_column(input, t.slice[1]))
+# def p_for(t) :
+#     'for_instr     : RFOR PARA declaracion_instr PUNTOCOMA expresion PUNTOCOMA incremento_instr PARC LLAVEA instrucciones LLAVEC'
+#     t[0] = For(t[3], t[5], t[7], t[10], t.lineno(1), find_column(input, t.slice[1]))
+    
+# #///////////////////////////////////////DEC_ASIG//////////////////////////////////////////////////
+
+def p_declaracion_asignacion(t):
+    '''declaracion_asignacion   :   declaracion_instr
+                                |   asignacion_instr'''
+    t[0] = t[1]
+    
+# #///////////////////////////////////////ACTUALIZACION//////////////////////////////////////////////////
+
+def p_actualizacion(t):
+    '''actualizacion    :   incremento_instr
+                        |   decremento_instr
+                        |   asignacion_instr
+                        '''
+    t[0] = t[1]
+    
 #///////////////////////////////////////BREAK//////////////////////////////////////////////////
 
 def p_break(t) :
@@ -431,6 +502,16 @@ def p_expresion_false(t):
     '''expresion : RFALSE'''
     t[0] = Primitivos(TIPO.BOOLEANO, False, t.lineno(1), find_column(input, t.slice[1]))
 
+#///////////////////////////////////////ERROR//////////////////////////////////////////////////
+
+def p_error(t):
+    if t:
+        parser.errok()
+    else:
+        print("Syntax erro at EOF")
+
+#/////////////////////////////////////////////////////////////////////////////////////////
+
 import ply.yacc as yacc
 parser = yacc.yacc()
 
@@ -478,6 +559,10 @@ for instruccion in ast.getInstrucciones():      # 1RA PASADA (Declaraciones y as
             err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", instruccion.fila, instruccion.columna)
             ast.getExcepciones().append(err)
             ast.updateConsola(err.toString())
+        if isinstance(value, Continue):
+            err = Excepcion("Semantico", "Sentencia CONTINUE fuera de ciclo", instruccion.fila, instruccion.columna)
+            ast.getExcepciones().append(err)
+            ast.updateConsola(err.toString())
 
 for instruccion in ast.getInstrucciones():      # 2DA PASADA (Main)
     contador = 0
@@ -494,6 +579,10 @@ for instruccion in ast.getInstrucciones():      # 2DA PASADA (Main)
             ast.updateConsola(value.toString())
         if isinstance(value, Break):
             err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", instruccion.fila, instruccion.columna)
+            ast.getExcepciones().append(err)
+            ast.updateConsola(err.toString())
+        if isinstance(value, Continue):
+            err = Excepcion("Semantico", "Sentencia CONTINUE fuera de ciclo", instruccion.fila, instruccion.columna)
             ast.getExcepciones().append(err)
             ast.updateConsola(err.toString())
 
