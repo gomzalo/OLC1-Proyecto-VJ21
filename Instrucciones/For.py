@@ -31,6 +31,11 @@ class For(Instruccion):
                 if bool(condicion) == True:     # Verifica si la condicion es verdadera
                     nuevaTabla = TablaSimbolos(table)   # Nuevo entorno
                     for instruccion in self.instrucciones:
+                        if isinstance(instruccion, Declaracion) and instruccion.identificador == self.actualizacion.identificador:
+                            err = Excepcion("Semantico", "Ya existe una variable con el mismo nombre en este contexto.", instruccion.fila, instruccion.columna)
+                            tree.getExcepciones().append(err)
+                            tree.updateConsola(err.toString())
+                            return None
                         result = instruccion.interpretar(tree, nuevaTabla)  # Ejecuta instruccion dentro del if (For?)
                         if isinstance(result, Excepcion):
                             tree.getExcepciones().append(result)
