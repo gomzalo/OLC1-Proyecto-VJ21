@@ -5,9 +5,8 @@ from Instrucciones.Break import Break
 
 
 class Llamada(Instruccion):
-    def __init__(self, nombre, parametros, fila, columna):
+    def __init__(self, nombre, fila, columna):
         self.nombre = nombre
-        self.parametros = parametros
         self.fila = fila
         self.columna = columna
 
