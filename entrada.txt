@@ -90,10 +90,16 @@ main(){
         print(num);
     }
     # Probando FOR
-    for(var i=0; i<4; i++){
+    
+    for(var i=5; i>0; i=i-1){
         print("");
         print("FOR -> " + (i))
     }
+    print("probando aritmeticas");
+    print(10/5)
+    print(10*5)
+    print(10**5)
+    print(10%5)
 }
 
 func HolaMundo2(){

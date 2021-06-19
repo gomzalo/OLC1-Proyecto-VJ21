@@ -424,6 +424,10 @@ def p_expresion_binaria(t):
     '''
     expresion           : expresion MAS expresion
                         | expresion MENOS expresion
+                        | expresion POR expresion
+                        | expresion DIV expresion
+                        | expresion MOD expresion
+                        | expresion POT expresion
                         | expresion MENORQUE expresion
                         | expresion MAYORQUE expresion
                         | expresion MENORIGUAL expresion
@@ -438,6 +442,14 @@ def p_expresion_binaria(t):
         t[0] = Aritmetica(OperadorAritmetico.MAS, t[1], t[3], t.lineno(2), find_column(input, t.slice[2]))
     if t[2] == '-':
         t[0] = Aritmetica(OperadorAritmetico.MENOS, t[1], t[3], t.lineno(2), find_column(input, t.slice[2]))
+    if t[2] == '*':
+        t[0] = Aritmetica(OperadorAritmetico.POR, t[1], t[3], t.lineno(2), find_column(input, t.slice[2]))
+    if t[2] == '/':
+        t[0] = Aritmetica(OperadorAritmetico.DIV, t[1], t[3], t.lineno(2), find_column(input, t.slice[2]))
+    if t[2] == '%':
+        t[0] = Aritmetica(OperadorAritmetico.MOD, t[1], t[3], t.lineno(2), find_column(input, t.slice[2]))
+    if t[2] == '**':
+        t[0] = Aritmetica(OperadorAritmetico.POT, t[1], t[3], t.lineno(2), find_column(input, t.slice[2]))
     if t[2] == '<':
         t[0] = Relacional(OperadorRelacional.MENORQUE, t[1], t[3], t.lineno(2), find_column(input, t.slice[2]))
     if t[2] == '>':
