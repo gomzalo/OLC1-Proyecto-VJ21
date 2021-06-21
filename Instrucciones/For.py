@@ -20,16 +20,17 @@ class For(Instruccion):
 
     def interpretar(self, tree, table):
         # Asignacion o declaracion
-        declaracion_asignacion = self.declaracion_asignacion.interpretar(tree, table)
+        tabla_intermedia = TablaSimbolos(table);
+        declaracion_asignacion = self.declaracion_asignacion.interpretar(tree, tabla_intermedia)
         if isinstance(declaracion_asignacion, Excepcion): return declaracion_asignacion
         
         while True:
-            condicion = self.condicion.interpretar(tree, table)
+            condicion = self.condicion.interpretar(tree, tabla_intermedia)
             if isinstance(condicion, Excepcion): return condicion
 
             if self.condicion.tipo == TIPO.BOOLEANO:
                 if bool(condicion) == True:     # Verifica si la condicion es verdadera
-                    nuevaTabla = TablaSimbolos(table)   # Nuevo entorno
+                    nuevaTabla = TablaSimbolos(tabla_intermedia)   # Nuevo entorno
                     for instruccion in self.instrucciones:
                         if isinstance(instruccion, Declaracion) and instruccion.identificador == self.actualizacion.identificador:
                             err = Excepcion("Semantico", "Ya existe una variable con el mismo nombre en este contexto.", instruccion.fila, instruccion.columna)
@@ -43,7 +44,7 @@ class For(Instruccion):
                         if isinstance(result, Break): return None
                         if isinstance(result, Continue): return None
                     # Actualizacion (Asignacion | Incremento | Decremento)
-                    actualizacion = self.actualizacion.interpretar(tree, table)
+                    actualizacion = self.actualizacion.interpretar(tree, tabla_intermedia)
                     if isinstance(actualizacion, Excepcion): return actualizacion
         
                 else:

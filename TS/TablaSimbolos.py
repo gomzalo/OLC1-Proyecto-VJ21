@@ -1,3 +1,4 @@
+from TS.Tipo import TIPO
 from TS.Excepcion import Excepcion
 
 
@@ -26,9 +27,9 @@ class TablaSimbolos:
         tablaActual = self
         while tablaActual != None:
             if simbolo.id in tablaActual.tabla :
-                if tablaActual.tabla[simbolo.id].getTipo() == simbolo.getTipo():
-                    tablaActual.tabla[simbolo.id].setValor(simbolo.getValor())
-                    tablaActual.tabla[simbolo.id].setTipo(simbolo.getTipo())
+                if tablaActual.tabla[simbolo.id.lower()].getTipo() == simbolo.getTipo()  or tablaActual.tabla[simbolo.id.lower()].getTipo() == TIPO.NULO or simbolo.getTipo() == TIPO.NULO:
+                    tablaActual.tabla[simbolo.id.lower()].setValor(simbolo.getValor())
+                    tablaActual.tabla[simbolo.id.lower()].setTipo(simbolo.getTipo())
                     return None     # Variable Actualizada
                 return Excepcion("Semantico", "Tipo de dato Diferente en Asignacion", simbolo.getFila(), simbolo.getColumna())
             else:

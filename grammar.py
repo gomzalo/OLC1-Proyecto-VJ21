@@ -75,6 +75,7 @@ tokens = [
     'DECIMAL',
     'ENTERO',
     'CADENA',
+    'CHAR',
     'NULO',
     'ID'
 ] + list(reservadas.values())
@@ -134,26 +135,53 @@ def t_ID(t):
     return t
 
 def t_CADENA(t):
-    r'(\".*(\\")*?\")'
+    r'\"(\\[nN]|\\\"|\\\'|\\[tT]|\\\\|\\\*|[^\\\'\"])*?\"'
     t.value = t.value[1:-1] # Removiendo comillas
-    t.value = t.value.replace("\\", "") # Removiendo barra
+    # t.value = t.value.replace('á', 'a')
+    # t.value = t.value.replace('é', 'e')
+    # t.value = t.value.replace('í', 'i')
+    # t.value = t.value.replace('ó', 'o')
+    # t.value = t.value.replace('ú', 'u')
+    t.value = t.value.replace('\\t', '\t')# Removiendo barra
+    t.value = t.value.replace('\\T', '\t')
+    t.value = t.value.replace('\\n', '\n')
+    t.value = t.value.replace('\\N', '\n')    
+    t.value = t.value.replace("\\\'", "\'")
+    t.value = t.value.replace("\\\"", "\"")
+    t.value = t.value.replace('\\\\', '\\')
+    return t
+
+def t_CHAR(t):
+    r'\'(\\[nN]|\\\"|\\\'|\\[tT]|\\\\|\\\*|[^\\\"\'])?\''
+    t.value = t.value[1:-1]  # removiendo comillas
+    t.value = t.value.replace('\\t', '\t')
+    t.value = t.value.replace('\\T', '\t')
+    t.value = t.value.replace('\\n', '\n')
+    t.value = t.value.replace('\\N', '\n')   
+    t.value = t.value.replace("\\\'", "\'")
+    t.value = t.value.replace("\\\"", "\"")
+    t.value = t.value.replace('\\\\', '\\')
     return t
 
 # Comentario simple // ...
 def t_COMENTARIO_SIMPLE(t):
-    r'\#.*\n'
+    r'\#[^\*].*\n'
     t.lexer.lineno += 1
+
+def t_COMENTARIO_MULTILINEA(t):
+    r'\#\*(.|\n)*?\*\#'
+    t.lexer.lineno += t.value.count('\n')
 
 # -------------     Caracteres ignorados        -------------
 
-t_ignore = " \t"
+t_ignore = " \r\n\t"
 
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += t.value.count("\n")
 
 def t_error(t): #LEXICOS
-    errores.append(Excepcion("Lexico", "Error léxico." + t.value[0], t.lexer.lineno, find_column(input, t)))
+    errores.append(Excepcion("Lexico", "Error léxico: " + t.value[0], t.lexer.lineno, find_column(input, t)))
     t.lexer.skip(1)
 
 # Obtener columna
@@ -269,7 +297,11 @@ def p_imprimir(t):
 
 def p_declaracion(t) :
     'declaracion_instr     : RVAR ID IGUAL expresion'
-    t[0] = Declaracion(t[2], t.lineno(2), find_column(input, t.slice[2]), t[4])
+    t[0] = Declaracion(t[2], TIPO.NULO, t.lineno(2), find_column(input, t.slice[2]), t[4])
+    
+def p_declaracion_1(t) :
+    'declaracion_instr     : RVAR ID'
+    t[0] = Declaracion(t[2], TIPO.NULO, t.lineno(2), find_column(input, t.slice[2]), None)
     # t[0] = Declaracion(t[1], t[2], t.lineno(2), find_column(input, t.slice[2]), t[4])
 
 #///////////////////////////////////////ASIGNACION//////////////////////////////////////////////////
@@ -404,20 +436,20 @@ def p_llamada(t) :
 
 #///////////////////////////////////////TIPO//////////////////////////////////////////////////
 
-def p_tipo(t) :
-    '''tipo     : RINT
-                | RFLOAT
-                | RSTRING
-                | RBOOLEAN
-                 '''
-    if t[1] == 'int':
-        t[0] = TIPO.ENTERO
-    elif t[1] == 'float':
-        t[0] = TIPO.DECIMAL
-    elif t[1] == 'string':
-        t[0] = TIPO.CADENA
-    elif t[1] == 'boolean':
-        t[0] = TIPO.BOOLEANO
+# def p_tipo(t) :
+#     '''tipo     : RINT
+#                 | RFLOAT
+#                 | RSTRING
+#                 | RBOOLEAN
+#                  '''
+#     if t[1].lower() == 'int':
+#         t[0] = TIPO.ENTERO
+#     elif t[1].lower() == 'float':
+#         t[0] = TIPO.DECIMAL
+#     elif t[1].lower() == 'string':
+#         t[0] = TIPO.CADENA
+#     elif t[1].lower() == 'boolean':
+#         t[0] = TIPO.BOOLEANO
 
 #///////////////////////////////////////EXPRESION//////////////////////////////////////////////////
 
@@ -506,6 +538,14 @@ def p_expresion_decimal(t):
 def p_expresion_cadena(t):
     '''expresion        : CADENA'''
     t[0] = Primitivos(TIPO.CADENA, str(t[1]).replace('\\n', '\n'), t.lineno(1), find_column(input, t.slice[1]))
+    
+def p_expresion_char(t):
+    '''expresion        : CHAR'''
+    t[0] = Primitivos(TIPO.CHARACTER, str(t[1]).replace('\\n', '\n'), t.lineno(1), find_column(input, t.slice[1]))
+    
+def p_expresion_null(t):
+    '''expresion        : RNULL'''
+    t[0] = Primitivos(TIPO.NULO, t[1], t.lineno(1), find_column(input, t.slice[1]))
 
 def p_expresion_true(t):
     '''expresion : RTRUE'''
@@ -521,7 +561,22 @@ def p_error(t):
     if t:
         parser.errok()
     else:
-        print("Syntax erro at EOF")
+        print("Error sintactico en EOF")
+
+# def p_instruccion_error(t):
+#     'instruccion        : error PUNTOCOMA'
+#     errores.append(Excepcion("Sintáctico","Error Sintáctico." + str(t[1].value) , t.lineno(1), find_column(input, t.slice[1])))
+#     t[0] = ""
+
+# def p_instruccion_error1(t):
+#     'instruccion        : error'
+#     errores.append(Excepcion("Sintáctico","Error Sintáctico." + str(t[1].value) , t.lineno(1), find_column(input, t.slice[1])))
+#     t[0] = ""
+
+# def p_error(t):
+#     if t != None:
+#         errores.append(Excepcion("Sintáctico","Error Sintáctico." + str(t.value) , t.lineno, find_column(input, t)))
+        # errores.append(Excepcion("Sintactico", "Error sintactico " + str(t[1].value) , t.lineno(1), find_column(input, t)))
 
 #/////////////////////////////////////////////////////////////////////////////////////////
 
@@ -545,64 +600,69 @@ def parse(inp):
     return parser.parse(inp)
 
 # INTERFAZ
+def analizar(entrada):
+    # f = open("./entrada.txt", "r")
+    # f = open("./archivo_02.jpr", "r")
+    # entrada = f.read()
 
-f = open("./entrada.txt", "r")
-entrada = f.read()
+    from TS.Arbol import Arbol
+    from TS.TablaSimbolos import TablaSimbolos
 
-from TS.Arbol import Arbol
-from TS.TablaSimbolos import TablaSimbolos
+    instrucciones = parse(entrada) # ARBOL AST
+    ast = Arbol(instrucciones)
+    TSGlobal = TablaSimbolos()
+    ast.setTSglobal(TSGlobal)
+    for error in errores:                   # CAPTURA DE ERRORES LEXICOS Y SINTACTICOS
+        ast.getExcepciones().append(error)
+        ast.updateConsola(error.toString())
 
-instrucciones = parse(entrada.lower()) # ARBOL AST
-ast = Arbol(instrucciones)
-TSGlobal = TablaSimbolos()
-ast.setTSglobal(TSGlobal)
-for error in errores:                   # CAPTURA DE ERRORES LEXICOS Y SINTACTICOS
-    ast.getExcepciones().append(error)
-    ast.updateConsola(error.toString())
+    if instrucciones == None:
+        return ast
+    
+    for instruccion in ast.getInstrucciones():      # 1RA PASADA (Declaraciones y asignaciones)
+        # if isinstance(instruccion, Funcion):
+        #     ast.addFuncion(instruccion)  # GUARDAR LA FUNCION EN "MEMORIA" (EN EL ARBOL)
+        if isinstance(instruccion, Declaracion) or isinstance(instruccion, Asignacion):
+            value = instruccion.interpretar(ast,TSGlobal)
+            if isinstance(value, Excepcion) :
+                ast.getExcepciones().append(value)
+                ast.updateConsola(value.toString())
+            if isinstance(value, Break):
+                err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", instruccion.fila, instruccion.columna)
+                ast.getExcepciones().append(err)
+                ast.updateConsola(err.toString())
+            if isinstance(value, Continue):
+                err = Excepcion("Semantico", "Sentencia CONTINUE fuera de ciclo", instruccion.fila, instruccion.columna)
+                ast.getExcepciones().append(err)
+                ast.updateConsola(err.toString())
 
-for instruccion in ast.getInstrucciones():      # 1RA PASADA (Declaraciones y asignaciones)
-    if isinstance(instruccion, Funcion):
-        ast.addFuncion(instruccion)  # GUARDAR LA FUNCION EN "MEMORIA" (EN EL ARBOL)
-    if isinstance(instruccion, Declaracion) or isinstance(instruccion, Asignacion):
-        value = instruccion.interpretar(ast,TSGlobal)
-        if isinstance(value, Excepcion) :
-            ast.getExcepciones().append(value)
-            ast.updateConsola(value.toString())
-        if isinstance(value, Break):
-            err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", instruccion.fila, instruccion.columna)
+    for instruccion in ast.getInstrucciones():      # 2DA PASADA (Main)
+        contador = 0
+        if isinstance(instruccion, Main):
+            contador += 1
+            if contador == 2:   # Verificando la duplicidad
+                err = Excepcion("Semantico", "Se encontraron 2 funciones Main.", instruccion.fila, instruccion.columna)
+                ast.getExcepciones().append(err)
+                ast.updateConsola(err.toString())
+                break
+            value = instruccion.interpretar(ast, TSGlobal)
+            if isinstance(value, Excepcion):
+                ast.getExcepciones().append(value)
+                ast.updateConsola(value.toString())
+            if isinstance(value, Break):
+                err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", instruccion.fila, instruccion.columna)
+                ast.getExcepciones().append(err)
+                ast.updateConsola(err.toString())
+            if isinstance(value, Continue):
+                err = Excepcion("Semantico", "Sentencia CONTINUE fuera de ciclo", instruccion.fila, instruccion.columna)
+                ast.getExcepciones().append(err)
+                ast.updateConsola(err.toString())
+
+    for instruccion in ast.getInstrucciones():    # 3ERA PASADA (SENTENCIAS FUERA DE MAIN)
+        if not (isinstance(instruccion, Main) or isinstance(instruccion, Declaracion) or isinstance(instruccion, Asignacion)):
+            err = Excepcion("Semantico", "¡Sentencias fuera de función Main!", instruccion.fila, instruccion.columna)
             ast.getExcepciones().append(err)
             ast.updateConsola(err.toString())
-        if isinstance(value, Continue):
-            err = Excepcion("Semantico", "Sentencia CONTINUE fuera de ciclo", instruccion.fila, instruccion.columna)
-            ast.getExcepciones().append(err)
-            ast.updateConsola(err.toString())
 
-for instruccion in ast.getInstrucciones():      # 2DA PASADA (Main)
-    contador = 0
-    if isinstance(instruccion, Main):
-        contador += 1
-        if contador == 2:   # Verificando la duplicidad
-            err = Excepcion("Semantico", "Se encontraron 2 funciones Main.", instruccion.fila, instruccion.columna)
-            ast.getExcepciones().append(err)
-            ast.updateConsola(err.toString())
-            break
-        value = instruccion.interpretar(ast, TSGlobal)
-        if isinstance(value, Excepcion):
-            ast.getExcepciones().append(value)
-            ast.updateConsola(value.toString())
-        if isinstance(value, Break):
-            err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", instruccion.fila, instruccion.columna)
-            ast.getExcepciones().append(err)
-            ast.updateConsola(err.toString())
-        if isinstance(value, Continue):
-            err = Excepcion("Semantico", "Sentencia CONTINUE fuera de ciclo", instruccion.fila, instruccion.columna)
-            ast.getExcepciones().append(err)
-            ast.updateConsola(err.toString())
-
-for instruccion in ast.getInstrucciones():    # 3ERA PASADA (SENTENCIAS FUERA DE MAIN)
-    if not (isinstance(instruccion, Main) or isinstance(instruccion, Declaracion) or isinstance(instruccion, Asignacion)):
-        err = Excepcion("Semantico", "¡Sentencias fuera de función Main!", instruccion.fila, instruccion.columna)
-        ast.getExcepciones().append(err)
-        ast.updateConsola(err.toString())
-
-print(ast.getConsola())
+    print(ast.getConsola())
+    return ast

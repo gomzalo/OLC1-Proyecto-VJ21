@@ -1,7 +1,7 @@
 # Archivo de prueba
 
 # Comentario de una sola línea
-
+print("error");
 #*
   De esta manera se
   representan los
@@ -300,6 +300,7 @@ main(){
     # ejecución número: 2
     # ejecución número: 3
     # ejecución número: 4
+    # ejecución número: 5
 
   print("---------- SENTENCIA WHILE ANIDADA ----------");
   var whi_2 = 1;

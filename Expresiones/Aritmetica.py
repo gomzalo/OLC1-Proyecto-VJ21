@@ -111,10 +111,10 @@ class Aritmetica(Instruccion):
                 self.tipo = TIPO.DECIMAL
                 return self.obtenerVal(self.OperacionIzq.tipo, izq) - self.obtenerVal(self.OperacionDer.tipo, der)
             # :::::::::::::::::::::::::::::::::::      Combinaciones BOOLEAN (izq)      :::::::::::::::::::::::::::::::::::
-            elif self.OperacionIzq.tipo == TIPO.BOOLEAN and self.OperacionDer.tipo == TIPO.ENTERO:  # BOOLEAN - INT
+            elif self.OperacionIzq.tipo == TIPO.BOOLEANO and self.OperacionDer.tipo == TIPO.ENTERO:  # BOOLEAN - INT
                 self.tipo = TIPO.ENTERO
                 return self.obtenerVal(self.OperacionIzq.tipo, izq) - self.obtenerVal(self.OperacionDer.tipo, der)
-            elif self.OperacionIzq.tipo == TIPO.BOOLEAN and self.OperacionDer.tipo == TIPO.DECIMAL:  # BOOLEAN - DOUBLE
+            elif self.OperacionIzq.tipo == TIPO.BOOLEANO and self.OperacionDer.tipo == TIPO.DECIMAL:  # BOOLEAN - DOUBLE
                 self.tipo = TIPO.DECIMAL
                 return self.obtenerVal(self.OperacionIzq.tipo, izq) - self.obtenerVal(self.OperacionDer.tipo, der)
             return Excepcion("Semantico", "Tipo Erroneo de operacion para -.", self.fila, self.columna)

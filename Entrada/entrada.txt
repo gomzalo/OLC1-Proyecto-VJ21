@@ -3,6 +3,13 @@ func HolaMundo(){
     print("HolaMundo");
 }
 
+#*
+fasdfklasdjfklasdjklfj
+comentario multilinea papa
+siuuu
+*#
+
+
 main(){
     HolaMundo();
     valor1++;
@@ -109,6 +116,20 @@ main(){
             print("No se que edad tengo xd.");
             break;
     }
+    # Caracteres de escape
+    print("Hola\nAmigos")
+    print("Hola\\Amigos")
+    print("Hola\"Amigos\" pu;etas")
+    print("Hola\'Amigos\' pu;etas")
+    print("Hola\rAmigos pu;etas")
+    print("Hola\tAmigos pu;etas")
+    # Cambio tipo
+
+    var hola111 = 11;
+    print(hola111);
+    hola111 = null;
+    hola111 = 14;
+    print(hola111);
 }
 
 func HolaMundo2(){
