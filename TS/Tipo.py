@@ -17,12 +17,14 @@ class OperadorAritmetico(Enum):
     POT = 5
     MOD = 6
     UMENOS = 7
+    MENOSMENOS = 8
+    MASMAS = 9
 
 class OperadorRelacional(Enum):
-    MENOR = 1
-    MAYOR = 2
-    MENORQUE = 3
-    MAYORQUE = 4
+    MENORQUE = 1
+    MAYORQUE = 2
+    MENORIGUAL = 3
+    MAYORIGUAL = 4
     IGUALIGUAL = 5
     DIFERENTE = 6
 

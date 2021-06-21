@@ -1,0 +1,138 @@
+var valor1 = 43243;
+func HolaMundo(){
+    print("HolaMundo");
+}
+
+#*
+fasdfklasdjfklasdjklfj
+comentario multilinea papa
+siuuu
+*#
+
+
+main(){
+    HolaMundo();
+    valor1++;
+    valor1--;
+    valor1--;
+    print(valor1);
+    HolaMundo2();
+    print(valor1);
+    print(5 + "Hola");
+    print(5 + 3+234+324+34+3);
+    print(-(500 + 32 - 600));
+    print(-(500 - 600) == 100)
+    print(! "7" == 7 && (100 == 10 + 90) );
+    var variable = 5 + 5;
+    print(variable)
+    print(VaRiaBle)
+    var cad1 = "Soy una cadena\nUn salto \"perro\" de linea."
+    var cad2 = variable + cad1;
+    print(cad2)
+    print(cad2 + cad1);
+    print("-------------------------------")
+    print(cad2);
+    cad2 = cad2 + cad1;
+    print(cad2);
+    print(true || false)
+    print(false)
+    var bandera = 100;
+    if((5+5)<(2+1)){
+        print("Entra al if");
+    }
+    else if(bandera + 50 > 300){
+        print("Entro al else if xd")
+    }
+    else if(false){
+        print("Entro al else if xddddd")
+    }
+    else if(bandera + 50 > 300){
+        print("Entro al else if xd")
+    }
+    else{
+        if(bandera - 100 == 0){
+            print("Entro a un if en un else que loko :0")
+            if(bandera - 100 == 0){
+                print("Entro a un if en un else que loko :0")
+                print(bandera)
+                print("Cambio de bandera")
+                var bandera = 50;
+                print(bandera)
+                if(bandera - 100 == 0){
+                    print("Entro a un if en un else que loko :0")
+                }
+            }
+            print("valor persistente")
+            print(bandera)
+        }
+        print("No entro a ningun if D:")
+    }
+
+    var num = 0;
+    while(num < 10){
+        print("Iteracion -> " + (num + 1))
+        if(num == 7){
+            break;
+        }
+        num = num + 1;
+    }
+    break;
+    num = 0;
+    while(num < 10){
+        print("Iteracion -> " + (num + 1))
+        if(num == 5){
+            break;
+        }
+        num = num + 1;
+    }
+    # Probando continue
+    num = 0;
+    while(num < 5){
+        print("")
+        print("CONTINUE -> " + (num + 1))
+        if(num == 1){
+            continue;
+        }
+        num = num + 1;
+        print(num);
+    }
+    # Probando FOR
+    
+    for(var i=5; i>0; i=i-1){
+        print("");
+        var i = 2;
+        print("FOR -> " + (i))
+    }
+    print("probando aritmeticas");
+    print(10/5)
+    print(10*5)
+    print(10**5)
+    print(10%5)
+
+    var edad = 11;
+    print("edad: " + edad)
+    switch(edad){
+        default:
+            print("No se que edad tengo xd.");
+            break;
+    }
+    # Caracteres de escape
+    print("Hola\nAmigos")
+    print("Hola\\Amigos")
+    print("Hola\"Amigos\" pu;etas")
+    print("Hola\'Amigos\' pu;etas")
+    print("Hola\rAmigos pu;etas")
+    print("Hola\tAmigos pu;etas")
+    # Cambio tipo
+
+    var hola111 = 11;
+    print(hola111);
+    hola111 = null;
+    hola111 = 14;
+    print(hola111);
+}
+
+func HolaMundo2(){
+    print("HolaMundo2");
+    print(5 + 3+234+324+34+3);
+}

@@ -1,8 +1,14 @@
 import os
+import re
+from TS.Arbol import Arbol
+from TS.TablaSimbolos import TablaSimbolos
+from grammar import getErrores, parse, errrores
+
 from tkinter import *
-from tkinter import ttk, scrolledtext, filedialog
+from tkinter import ttk, scrolledtext, filedialog, messagebox
 
 raiz = Tk()
+cont = None
 
 def salir(): #SALIR DEL PROGRAMA
     value = messagebox.askokcancel("Salir", "Está seguro que desea salir?")
@@ -212,3 +218,5 @@ frame.grid(sticky='news')
 canvas.grid(row=0,column=1)
 scrollbar.grid(row=0, column=2, sticky='ns')
 scrollbar2.grid(row=1, column=1, sticky='ns')
+
+raiz.mainloop()
