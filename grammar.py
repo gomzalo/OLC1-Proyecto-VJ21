@@ -563,15 +563,15 @@ def p_error(t):
     else:
         print("Error sintactico en EOF")
 
-# def p_instruccion_error(t):
-#     'instruccion        : error PUNTOCOMA'
-#     errores.append(Excepcion("Sintáctico","Error Sintáctico." + str(t[1].value) , t.lineno(1), find_column(input, t.slice[1])))
-#     t[0] = ""
+def p_instruccion_error(t):
+    'instruccion        : error PUNTOCOMA'
+    errores.append(Excepcion("Sintáctico","Error Sintáctico: " + str(t[1].value) , t.lineno(1), find_column(input, t.slice[1])))
+    t[0] = ""
 
-# def p_instruccion_error1(t):
-#     'instruccion        : error'
-#     errores.append(Excepcion("Sintáctico","Error Sintáctico." + str(t[1].value) , t.lineno(1), find_column(input, t.slice[1])))
-#     t[0] = ""
+def p_instruccion_error1(t):
+    'instruccion        : error'
+    errores.append(Excepcion("Sintáctico","Error Sintáctico: " + str(t[1].value) , t.lineno(1), find_column(input, t.slice[1])))
+    t[0] = ""
 
 # def p_error(t):
 #     if t != None:
