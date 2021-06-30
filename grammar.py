@@ -135,13 +135,15 @@ def t_ID(t):
     return t
 
 def t_CADENA(t):
-    r'\"(\\[nN]|\\\"|\\\'|\\[tT]|\\\\|\\\*|[^\\\'\"])*?\"'
+    r'\"(\\[nN]|\\\"|\\\'|\\[tT]|\\[rR]|\\\\|\\\*|[^\\\'\"])*?\"'
     t.value = t.value[1:-1] # Removiendo comillas
     # t.value = t.value.replace('á', 'a')
     # t.value = t.value.replace('é', 'e')
     # t.value = t.value.replace('í', 'i')
     # t.value = t.value.replace('ó', 'o')
     # t.value = t.value.replace('ú', 'u')
+    t.value = t.value.replace('\\r', '\r')# Removiendo barra
+    t.value = t.value.replace('\\R', '\r')# Removiendo barra
     t.value = t.value.replace('\\t', '\t')# Removiendo barra
     t.value = t.value.replace('\\T', '\t')
     t.value = t.value.replace('\\n', '\n')
@@ -425,15 +427,58 @@ def p_main(t) :
 
 #///////////////////////////////////////FUNCION//////////////////////////////////////////////////
 
-def p_funcion(t) :
+def p_funcion_1(t) :
+    'funcion_instr     : RFUNC ID PARA parametros PARC LLAVEA instrucciones LLAVEC'
+    t[0] = Funcion(t[2], t[4], t[7], t.lineno(1), find_column(input, t.slice[1]))
+
+def p_funcion_2(t) :
     'funcion_instr     : RFUNC ID PARA PARC LLAVEA instrucciones LLAVEC'
-    t[0] = Funcion(t[2], t[6], t.lineno(1), find_column(input, t.slice[1]))
+    t[0] = Funcion(t[2], [], t[6], t.lineno(1), find_column(input, t.slice[1]))
+
+#///////////////////////////////////////PARAMETROS//////////////////////////////////////////////////
+
+def p_parametros_1(t):
+    'parametros         : parametros COMA parametro'
+    t[1].append(t[3])
+    t[0] = t[1]
+    
+def p_parametros_2(t):
+    'parametros         : parametro'
+    t[0] = [t[1]]
+    
+#///////////////////////////////////////PARAMETRO//////////////////////////////////////////////////
+    
+def p_parametro(t):
+    'parametro          : tipo ID'
+    t[0] = {'tipo':t[1], 'identificador':t[2]}
 
 #///////////////////////////////////////LLAMADA A FUNCION//////////////////////////////////////////////////
 
-def p_llamada(t) :
+def p_llamada_1(t) :
     'llamada_instr     : ID PARA PARC'
-    t[0] = Llamada(t[1], t.lineno(1), find_column(input, t.slice[1]))
+    t[0] = Llamada(t[1], [], t.lineno(1), find_column(input, t.slice[1]))
+    
+def p_llamada_2(t):
+    'llamada_instr      : ID PARA parametros_llamada PARC'
+    t[0] = Llamada(t[1], t[3], t.lineno(1), find_column(input, t.slice[1]))
+
+#///////////////////////////////////////PARAMETROS LLAMADA A FUNCION//////////////////////////////////////////////////
+
+def p_parametrosLL_1(t) :
+    'parametros_llamada     : parametros_llamada COMA parametro_llamada'
+    t[1].append(t[3])
+    t[0] = t[1]
+    
+def p_parametrosLL_2(t) :
+    'parametros_llamada    : parametro_llamada'
+    t[0] = [t[1]]
+
+#///////////////////////////////////////PARAMETRO LLAMADA A FUNCION//////////////////////////////////////////////////
+
+def p_parametroLL(t) :
+    'parametro_llamada     : expresion'
+    t[0] = t[1]
+
 
 #///////////////////////////////////////TIPO//////////////////////////////////////////////////
 
@@ -609,7 +654,7 @@ def analizar(entrada):
     from TS.Arbol import Arbol
     from TS.TablaSimbolos import TablaSimbolos
 
-    instrucciones = parse(entrada) # ARBOL AST
+    instrucciones = parse(entrada.lower()) # ARBOL AST
     ast = Arbol(instrucciones)
     TSGlobal = TablaSimbolos()
     ast.setTSglobal(TSGlobal)
@@ -621,8 +666,8 @@ def analizar(entrada):
         return ast
     
     for instruccion in ast.getInstrucciones():      # 1RA PASADA (Declaraciones y asignaciones)
-        # if isinstance(instruccion, Funcion):
-        #     ast.addFuncion(instruccion)  # GUARDAR LA FUNCION EN "MEMORIA" (EN EL ARBOL)
+        if isinstance(instruccion, Funcion):
+            ast.addFuncion(instruccion)  # GUARDAR LA FUNCION EN "MEMORIA" (EN EL ARBOL)
         if isinstance(instruccion, Declaracion) or isinstance(instruccion, Asignacion):
             value = instruccion.interpretar(ast,TSGlobal)
             if isinstance(value, Excepcion) :
@@ -660,7 +705,7 @@ def analizar(entrada):
                 ast.updateConsola(err.toString())
 
     for instruccion in ast.getInstrucciones():    # 3ERA PASADA (SENTENCIAS FUERA DE MAIN)
-        if not (isinstance(instruccion, Main) or isinstance(instruccion, Declaracion) or isinstance(instruccion, Asignacion)):
+        if not (isinstance(instruccion, Main) or isinstance(instruccion, Declaracion) or isinstance(instruccion, Asignacion) or isinstance(instruccion, Funcion)):
             err = Excepcion("Semantico", "¡Sentencias fuera de función Main!", instruccion.fila, instruccion.columna)
             ast.getExcepciones().append(err)
             ast.updateConsola(err.toString())

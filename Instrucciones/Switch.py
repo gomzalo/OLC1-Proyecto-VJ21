@@ -17,18 +17,18 @@ class Switch(Instruccion):
     def interpretar(self, tree, table):
         condicion = self.condicion.interpretar(tree, table)
         if isinstance(condicion, Excepcion): return condicion
-        print("Int SW")
+        # print("Int SW")
         if self.condicion.tipo != None: # Verificando si es uan condicion valida
             # SW - CA - DEF
-            print("SW NO NULL")
+            # print("SW NO NULL")
             if self.instruccionesSwCsDf != None and self.instruccionesSwCs == None and self.instruccionesSwDf != None:
                 nuevaTabla = TablaSimbolos(table)    # Nuevo entorno SWITCH
-                print("CASO1")
+                # print("CASO1")
                 for cond_instruccion in self.instruccionesSwCsDf:
                     tabla_case = TablaSimbolos(nuevaTabla) # Nuevo entorno CASE
                     # result_case = cond_instruccion.interpretar(tree, tabla_case)  # Ejecuta instruccion dentro de switch
                     result_case = cond_instruccion.condicion.valor  # Ejecuta instruccion dentro de switch
-                    print("RESCAS1", result_case)
+                    # print("RESCAS1", result_case)
                     if isinstance(result_case, Excepcion):
                         tree.getExcepciones().append(result_case)
                         tree.updateConsola(result_case.toString())
@@ -55,7 +55,7 @@ class Switch(Instruccion):
             # SW - CA
             elif self.instruccionesSwCsDf == None and self.instruccionesSwCs != None and self.instruccionesSwDf == None:
                 nuevaTabla = TablaSimbolos(table)    # Nuevo entorno SWITCH
-                print("CASO2")
+                # print("CASO2")
                 for cond_instruccion in self.instruccionesSwCs:
                     tabla_case = TablaSimbolos(nuevaTabla) # Nuevo entorno CASE
                     result_case = cond_instruccion.condicion.valor  # Ejecuta instruccion dentro de switch
@@ -75,7 +75,7 @@ class Switch(Instruccion):
                 # SW - DF
             elif self.instruccionesSwCsDf == None and self.instruccionesSwCs == None and  self.instruccionesSwDf != None:
                 nuevaTabla = TablaSimbolos(table)   # Nuevo entorno SWITCH
-                print("CASO3")
+                # print("CASO3")
                 for instruccion in self.instruccionesSwDf:
                     # tabla_default = TablaSimbolos(nuevaTabla)   # Nuevo entorno DEFAULT
                     # print("INSTCASO3: ", instruccion)
