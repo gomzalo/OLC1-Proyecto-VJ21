@@ -13,7 +13,7 @@ class Identificador(Instruccion):
         simbolo = table.getTabla(self.identificador.lower())
 
         if simbolo == None:
-            return Excepcion("Semantico", "Variable " + self.identificador + " no encontrada.", self.fila, self.columna)
+            return Excepcion("Semantico", "Variable " + self.identificador.lower() + " no encontrada.", self.fila, self.columna)
 
         self.tipo = simbolo.getTipo()
 

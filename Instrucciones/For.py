@@ -19,30 +19,29 @@ class For(Instruccion):
         self.columna = columna
 
     def interpretar(self, tree, table):
+        if isinstance(self.declaracion_asignacion, Asignacion):
+            cond = self.declaracion_asignacion.interpretar(tree, table)
+            if isinstance(cond, Excepcion): return cond
+        
         # Asignacion o declaracion
         tabla_intermedia = TablaSimbolos(table);
-        declaracion_asignacion = self.declaracion_asignacion.interpretar(tree, tabla_intermedia)
-        if isinstance(declaracion_asignacion, Excepcion): return declaracion_asignacion
+        cond = self.declaracion_asignacion.interpretar(tree, tabla_intermedia)
+        if isinstance(cond, Excepcion): return cond
         
         while True:
-            condicion = self.condicion.interpretar(tree, tabla_intermedia)
-            if isinstance(condicion, Excepcion): return condicion
+            cond_ = self.condicion.interpretar(tree, tabla_intermedia)
+            if isinstance(cond_, Excepcion): return cond_
 
             if self.condicion.tipo == TIPO.BOOLEANO:
-                if bool(condicion) == True:     # Verifica si la condicion es verdadera
+                if bool(cond_) == True:     # Verifica si la condicion es verdadera
                     nuevaTabla = TablaSimbolos(tabla_intermedia)   # Nuevo entorno
                     for instruccion in self.instrucciones:
-                        if isinstance(instruccion, Declaracion) and instruccion.identificador == self.actualizacion.identificador:
-                            err = Excepcion("Semantico", "Ya existe una variable con el mismo nombre en este contexto.", instruccion.fila, instruccion.columna)
-                            tree.getExcepciones().append(err)
-                            tree.updateConsola(err.toString())
-                            return None
                         result = instruccion.interpretar(tree, nuevaTabla)  # Ejecuta instruccion dentro del if (For?)
                         if isinstance(result, Excepcion):
                             tree.getExcepciones().append(result)
                             tree.updateConsola(result.toString())
                         if isinstance(result, Break): return None
-                        if isinstance(result, Continue): return None
+                        if isinstance(result, Continue): break
                     # Actualizacion (Asignacion | Incremento | Decremento)
                     actualizacion = self.actualizacion.interpretar(tree, tabla_intermedia)
                     if isinstance(actualizacion, Excepcion): return actualizacion

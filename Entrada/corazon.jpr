@@ -1,0 +1,79 @@
+main(){
+    
+    #*
+    print("----------------CICLO WHILE Y FOR---------------");
+    var numeroFactorial = 6;
+    while (numeroFactorial > -1) {
+        var fact = 1;
+        var cadena1 = "El factorial de: " + numeroFactorial + " = ";
+        if (numeroFactorial =! 0) {
+            for (var i = numeroFactorial; i > 0; i--) {
+            fact = fact * i;
+            cadena1 = cadena1 + i;
+            if (i > 1) {
+                cadena1 = cadena1 + " * ";
+            } else {
+                cadena1 = cadena1 + " = ";
+            }
+            }
+        }
+        cadena1 = cadena1 + fact;
+        print(cadena1);
+        numeroFactorial--;
+    }
+    *#
+
+    #*
+    print("-----------------WHILE ANIDADO------------------");
+    var iii = 0;
+    var nump = 8;
+    while (iii < nump) {
+        var j = 0;
+        var numeroMostrar = 1;
+        var unaFila = "";
+        while (j <= iii) {
+            unaFila = unaFila + " " + numeroMostrar;
+            numeroMostrar = numeroMostrar + 1;
+            j = j + 1;
+        }
+        print(unaFila);
+        iii = iii + 1;
+    }
+    print("Si la figura es un triangulo de numeros :3");
+    *#
+    
+    print("------------------------------------------------");
+
+
+    var cadenaFigura = "";
+    var figuraUNO = 10
+    var ip;
+    for (ip = -3 * figuraUNO / 2; ip <= figuraUNO; ip++) {
+        cadenaFigura = "";
+        var j;
+        for (j = -3 * figuraUNO / 2; j <= 3 * figuraUNO / 2; j++) {
+            var absolutoi;
+            absolutoi = ip;
+            var absolutoj;
+            absolutoj = j;
+            
+            if (ip < 0) {
+                absolutoi = ip * -1;
+            }
+            if (j < 0) {
+                absolutoj = j * -1;
+            }
+            if ((absolutoi + absolutoj < figuraUNO) || ((-figuraUNO / 2 - ip) * (-figuraUNO / 2 - ip) + (figuraUNO / 2 - j) * (figuraUNO / 2 - j) <= figuraUNO * figuraUNO / 2) || ((-figuraUNO / 2 - ip) * (-figuraUNO / 2 - ip) + (-figuraUNO / 2 - j) * (-figuraUNO / 2 - j) <= figuraUNO * figuraUNO / 2)) {
+                cadenaFigura = cadenaFigura + "* ";
+            }
+            else {
+                cadenaFigura = cadenaFigura + ". ";
+            }
+            
+        }
+        print(cadenaFigura);
+    }
+    print("Si la figura es un corazon <3");
+    }
+    
+}

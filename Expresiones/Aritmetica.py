@@ -206,11 +206,11 @@ class Aritmetica(Instruccion):
             # :::::::::::::::::::::::::::::::::::      Combinaciones INT (izq)      :::::::::::::::::::::::::::::::::::
             if self.OperacionIzq.tipo == TIPO.ENTERO:
                 self.tipo = TIPO.ENTERO
-                return self.obtenerVal(self.OperacionIzq.tipo, izq)
+                return - self.obtenerVal(self.OperacionIzq.tipo, izq)
             # :::::::::::::::::::::::::::::::::::      Combinaciones DOUBLE (izq)      :::::::::::::::::::::::::::::::::::
             elif self.OperacionIzq.tipo == TIPO.DECIMAL:
                 self.tipo = TIPO.DECIMAL
-                return self.obtenerVal(self.OperacionIzq.tipo, izq)
+                return - self.obtenerVal(self.OperacionIzq.tipo, izq)
             return Excepcion("Semantico", "Tipo Erroneo de operacion para - unario.", self.fila, self.columna)
         return Excepcion("Semantico", "Tipo de operacion no especificada.", self.fila, self.columna)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

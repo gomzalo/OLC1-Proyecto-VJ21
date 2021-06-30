@@ -174,7 +174,7 @@ def t_COMENTARIO_MULTILINEA(t):
 
 # -------------     Caracteres ignorados        -------------
 
-t_ignore = " \r\n\t"
+t_ignore = " \t"
 
 def t_newline(t):
     r'\n+'
@@ -204,9 +204,9 @@ precedence = (
     ('left', 'MAS', 'MENOS'),
     ('left', 'MOD', 'POR', 'DIV'),
     ('nonassoc', 'POT'),
-    ('right', 'UMENOS'),
     ('right', 'UMASMAS'),
     ('right', 'UMENOSMENOS'),
+    ('right', 'UMENOS'),
 )
 
 # ********************************************************
@@ -297,12 +297,13 @@ def p_imprimir(t):
 
 def p_declaracion(t) :
     'declaracion_instr     : RVAR ID IGUAL expresion'
-    t[0] = Declaracion(t[2], TIPO.NULO, t.lineno(2), find_column(input, t.slice[2]), t[4])
+    # t[0] = Declaracion(t[2], TIPO.NULO, t.lineno(2), find_column(input, t.slice[2]), t[4])
+    t[0] = Declaracion(t[2], t.lineno(2), find_column(input, t.slice[2]), t[4])
     
 def p_declaracion_1(t) :
     'declaracion_instr     : RVAR ID'
-    t[0] = Declaracion(t[2], TIPO.NULO, t.lineno(2), find_column(input, t.slice[2]), None)
-    # t[0] = Declaracion(t[1], t[2], t.lineno(2), find_column(input, t.slice[2]), t[4])
+    # t[0] = Declaracion(t[2], TIPO.NULO, t.lineno(2), find_column(input, t.slice[2]), None)
+    t[0] = Declaracion(t[2], t.lineno(2), find_column(input, t.slice[2]), None)
 
 #///////////////////////////////////////ASIGNACION//////////////////////////////////////////////////
 
@@ -436,20 +437,20 @@ def p_llamada(t) :
 
 #///////////////////////////////////////TIPO//////////////////////////////////////////////////
 
-# def p_tipo(t) :
-#     '''tipo     : RINT
-#                 | RFLOAT
-#                 | RSTRING
-#                 | RBOOLEAN
-#                  '''
-#     if t[1].lower() == 'int':
-#         t[0] = TIPO.ENTERO
-#     elif t[1].lower() == 'float':
-#         t[0] = TIPO.DECIMAL
-#     elif t[1].lower() == 'string':
-#         t[0] = TIPO.CADENA
-#     elif t[1].lower() == 'boolean':
-#         t[0] = TIPO.BOOLEANO
+def p_tipo(t) :
+    '''tipo     : RINT
+                | RFLOAT
+                | RSTRING
+                | RBOOLEAN
+                 '''
+    if t[1].lower() == 'int':
+        t[0] = TIPO.ENTERO
+    elif t[1].lower() == 'float':
+        t[0] = TIPO.DECIMAL
+    elif t[1].lower() == 'string':
+        t[0] = TIPO.CADENA
+    elif t[1].lower() == 'boolean':
+        t[0] = TIPO.BOOLEANO
 
 #///////////////////////////////////////EXPRESION//////////////////////////////////////////////////
 
@@ -635,9 +636,9 @@ def analizar(entrada):
                 err = Excepcion("Semantico", "Sentencia CONTINUE fuera de ciclo", instruccion.fila, instruccion.columna)
                 ast.getExcepciones().append(err)
                 ast.updateConsola(err.toString())
-
+    contador = 0
     for instruccion in ast.getInstrucciones():      # 2DA PASADA (Main)
-        contador = 0
+        
         if isinstance(instruccion, Main):
             contador += 1
             if contador == 2:   # Verificando la duplicidad

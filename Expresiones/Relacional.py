@@ -17,6 +17,10 @@ class Relacional(Instruccion):
         if isinstance(izq, Excepcion): return izq
         der = self.OperacionDer.interpretar(tree, table)
         if isinstance(der, Excepcion): return der
+        print("valor der: " + str(self.OperacionDer))
+        print("tipo der: " + str(self.OperacionDer.tipo))
+        print("valor izq: " + str(self.OperacionIzq))
+        print("tipo izq: " + str(self.OperacionIzq.tipo))
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         if self.operador == OperadorRelacional.MENORQUE:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
