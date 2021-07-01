@@ -1,4 +1,6 @@
 var valor1 = 43243;
+var contadorA = 0;
+
 func HolaMundo(){
     print("HolaMundo");
 }
@@ -131,10 +133,18 @@ main(){
     hola111 = 14;
     print(hola111);
     print("====================================")
-    print("proband FUNC con PARAMETROS")
+    print("probando FUNC con PARAMETROS")
     suma(234, 32);
     suma5(1, 2, 3, 4, 5);
 
+    print("====================================")
+    print("probando RETURN")
+    print(suma(500, 100))
+    print("La suma de 500 + 100 es igual a: " + suma(500, 100))
+    var suma = suma5(1, 2,3,4,5);
+    print(suma);
+    print(ackermann(3,4))
+    pRiNT(contadora);
 }
 
 func HolaMundo2(strin val){
@@ -142,9 +152,36 @@ func HolaMundo2(strin val){
 }
 
 func Suma(int a, int b){
-    print("La suma de " + a + " + " + b + " es igual a: " + ( a + b ));
+    # print("La suma de " + a + " + " + b + " es igual a: " + ( a + b ));
+    return a + b;
 }
 
 func Suma5(int a, int b, int c, int d, int e){
-    print("La suma de " + a + " + " + b + " + " + c + " + " + d + " + " + e + " es igual a: " + ( a + b + c + d + e ));
+    # print("La suma de " + a + " + " + b + " + " + c + " + " + d + " + " + e + " es igual a: " + ( a + b + c + d + e ));
+    return a + b + c + d + e;
+}
+
+func par(int nump) {
+    if (nump == 0) {
+        return true;
+    }
+    return impar(nump - 1);
+}
+
+func impar(int numi) {
+    if (numi == 0) {
+        return false;
+    }
+    return par(numi - 1);
+}
+
+func ackermann(int m, int n){
+    contadorA = contadorA + 1;
+    if (m == 0){
+        return n + 1;
+    } else if (m > 0 && n == 0){
+        return ackermann(m-1, 1)
+    } else{
+        return ackermann(m-1, ackermann(m, n-1))
+    }
 }

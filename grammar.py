@@ -41,7 +41,8 @@ reservadas = {
     'case'      : 'RCASE',
     'default'   : 'RDEFAULT',
     'main'      : 'RMAIN',
-    'func'      : 'RFUNC'
+    'func'      : 'RFUNC',
+    'return'    : 'RRETURN'
 }
 
 tokens = [
@@ -237,6 +238,7 @@ from Instrucciones.Incremento import Incremento
 from Instrucciones.Decremento import Decremento
 from Instrucciones.Switch import Switch
 from Instrucciones.Case import Case
+from Instrucciones.Return import Return
 
 # -------------     Definicion de la gramatica      -------------
 
@@ -282,6 +284,7 @@ def p_instruccion(t):
                         | llamada_instr terminacion
                         | incremento_instr terminacion
                         | decremento_instr terminacion
+                        | return_instr terminacion
                         '''
     t[0] = t[1]
 
@@ -479,6 +482,11 @@ def p_parametroLL(t) :
     'parametro_llamada     : expresion'
     t[0] = t[1]
 
+#///////////////////////////////////////RETURN//////////////////////////////////////////////////
+
+def p_return(t) :
+    'return_instr     : RRETURN expresion'
+    t[0] = Return(t[2], t.lineno(1), find_column(input, t.slice[1]))
 
 #///////////////////////////////////////TIPO//////////////////////////////////////////////////
 
@@ -568,6 +576,10 @@ def p_expresion_agrupacion(t):
     expresion           : PARA expresion PARC
     '''
     t[0] = t[2]
+
+def p_expresion_llamada(t):
+    '''expresion : llamada_instr'''
+    t[0] = t[1]
 
 def p_expresion_identificador(t):
     '''expresion        : ID'''
@@ -701,6 +713,10 @@ def analizar(entrada):
                 ast.updateConsola(err.toString())
             if isinstance(value, Continue):
                 err = Excepcion("Semantico", "Sentencia CONTINUE fuera de ciclo", instruccion.fila, instruccion.columna)
+                ast.getExcepciones().append(err)
+                ast.updateConsola(err.toString())
+            if isinstance(value, Return):
+                err = Excepcion("Semantico", "Sentencia RETURN fuera de ciclo", instruccion.fila, instruccion.columna)
                 ast.getExcepciones().append(err)
                 ast.updateConsola(err.toString())
 

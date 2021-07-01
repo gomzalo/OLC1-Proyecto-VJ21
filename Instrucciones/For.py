@@ -1,3 +1,4 @@
+from Instrucciones.Return import Return
 from Abstract.Instruccion import Instruccion
 from TS.Excepcion import Excepcion
 from TS.Tipo import TIPO
@@ -42,6 +43,7 @@ class For(Instruccion):
                             tree.updateConsola(result.toString())
                         if isinstance(result, Break): return None
                         if isinstance(result, Continue): break
+                        if isinstance(result, Return): return result
                     # Actualizacion (Asignacion | Incremento | Decremento)
                     actualizacion = self.actualizacion.interpretar(tree, tabla_intermedia)
                     if isinstance(actualizacion, Excepcion): return actualizacion
