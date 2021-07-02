@@ -145,6 +145,13 @@ main(){
     print(suma);
     print(ackermann(3,4))
     pRiNT(contadora);
+    print("====================================")
+    print("probando NATIVAS")
+    vAr cadenita = "Esta es uNa CadeNa Normalita :d"
+    vAR mayus = toUpper(cadenita)
+    Var ToLower = ToLower(cadenita)
+    print(mayus)
+    print(ToLower)
 }
 
 func HolaMundo2(strin val){

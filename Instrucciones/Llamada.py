@@ -27,7 +27,7 @@ class Llamada(Instruccion):
                 
                 if result.parametros[contador]["tipo"] == expresion.tipo: # Verificacion de tipo
                     # Creacion de simbolo e ingresarlo a la tabla de simbolos
-                    simbolo = Simbolo(str(result.parametros[contador]['identificador']), result.parametros[contador]['tipo'], self.fila, self.columna, resultExpresion)
+                    simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), result.parametros[contador]['tipo'], self.fila, self.columna, resultExpresion)
                     resultTabla = nuevaTabla.setTabla(simbolo)
                     if isinstance(resultTabla, Excepcion): return resultTabla
                     

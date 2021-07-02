@@ -16,6 +16,8 @@
 # ********************************************************
 # ******************       LEXICO      *******************
 # ********************************************************
+from Nativas.ToLower import ToLower
+from Nativas.ToUpper import ToUpper
 import re
 from TS.Excepcion import Excepcion
 
@@ -657,6 +659,22 @@ def parse(inp):
     input = inp
     return parser.parse(inp)
 
+# :::::::::     Creando funciones nativas   :::::::::
+# Creacion y declaracion de las funciones nativas
+def crearNativas(ast):
+    # ToUpper
+    nombre = "toupper"
+    parametros = [{'tipo':TIPO.CADENA, 'identificador':'toUpper##Param1'}]
+    instrucciones = []
+    toUpper = ToUpper(nombre, parametros, instrucciones, -1, -1)
+    ast.addFuncion(toUpper)     # Guardar la funcion en "memoria" (en el arbol)
+    # ToLower
+    nombre = "tolower"
+    parametros = [{'tipo':TIPO.CADENA, 'identificador':'toLower##Param1'}]
+    instrucciones = []
+    toLower = ToLower(nombre, parametros, instrucciones, -1, -1)
+    ast.addFuncion(toLower)     # Guardar la funcion en "memoria" (en el arbol)
+
 # INTERFAZ
 def analizar(entrada):
     # f = open("./entrada.txt", "r")
@@ -670,6 +688,7 @@ def analizar(entrada):
     ast = Arbol(instrucciones)
     TSGlobal = TablaSimbolos()
     ast.setTSglobal(TSGlobal)
+    crearNativas(ast)
     for error in errores:                   # CAPTURA DE ERRORES LEXICOS Y SINTACTICOS
         ast.getExcepciones().append(error)
         ast.updateConsola(error.toString())
