@@ -152,6 +152,14 @@ main(){
     Var ToLower = ToLower(cadenita)
     print(mayus)
     print(ToLower)
+    var trunquito = 3.44022
+    print(trunquito)
+    var trunquito1 = truncate(trunquito)
+    print(trunquito1)
+    Var trunkado = 4
+    var trunka2 = truncate(trunkado)
+    print(trunka2)
+    
 }
 
 func HolaMundo2(strin val){

@@ -17,16 +17,22 @@ class Funcion(Instruccion):
 
     def interpretar(self, tree, table):
         nuevaTabla = TablaSimbolos(table)
-        for instruccion in self.instrucciones:  # REALIZAR LAS ACCIONES
-            value = instruccion.interpretar(tree, nuevaTabla)
-            if isinstance(value, Excepcion):
-                tree.getExcepciones().append(value)
-                tree.updateConsola(value.toString())
-            if isinstance(value, Break):
-                err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", instruccion.fila, instruccion.columna)
-                tree.getExcepciones().append(err)
-                tree.updateConsola(err.toString())
-            if isinstance(value, Return):
-                self.tipo = value.tipo
-                return value.result
+        if len(self.instrucciones) > 1:
+            for instruccion in self.instrucciones:  # REALIZAR LAS ACCIONES
+                value = instruccion.interpretar(tree, nuevaTabla)
+                if isinstance(value, Excepcion):
+                    tree.getExcepciones().append(value)
+                    tree.updateConsola(value.toString())
+                if isinstance(value, Break):
+                    err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", instruccion.fila, instruccion.columna)
+                    tree.getExcepciones().append(err)
+                    tree.updateConsola(err.toString())
+                if isinstance(value, Return):
+                    self.tipo = value.tipo
+                    return value.result
+        else:
+            # print("No hay instrucciones xd.")
+            err = Excepcion("Sintactico", "No viene ninguna instrucción dentro de la función.", self.fila, self.columna)
+            tree.getExcepciones().append(err)
+            tree.updateConsola(err.toString())
         return None

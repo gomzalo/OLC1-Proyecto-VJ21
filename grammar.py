@@ -16,6 +16,7 @@
 # ********************************************************
 # ******************       LEXICO      *******************
 # ********************************************************
+from Nativas.Truncate import Truncate
 from Nativas.ToLower import ToLower
 from Nativas.ToUpper import ToUpper
 import re
@@ -440,6 +441,10 @@ def p_funcion_2(t) :
     'funcion_instr     : RFUNC ID PARA PARC LLAVEA instrucciones LLAVEC'
     t[0] = Funcion(t[2], [], t[6], t.lineno(1), find_column(input, t.slice[1]))
 
+def p_funcion_3(t) :
+    'funcion_instr     : RFUNC ID PARA PARC LLAVEA LLAVEC'
+    t[0] = Funcion(t[2], [], [], t.lineno(1), find_column(input, t.slice[1]))
+
 #///////////////////////////////////////PARAMETROS//////////////////////////////////////////////////
 
 def p_parametros_1(t):
@@ -662,19 +667,25 @@ def parse(inp):
 # :::::::::     Creando funciones nativas   :::::::::
 # Creacion y declaracion de las funciones nativas
 def crearNativas(ast):
-    # ToUpper
+    # ~~~~~~~~  ToUpper ~~~~~~~~
     nombre = "toupper"
     parametros = [{'tipo':TIPO.CADENA, 'identificador':'toUpper##Param1'}]
     instrucciones = []
     toUpper = ToUpper(nombre, parametros, instrucciones, -1, -1)
     ast.addFuncion(toUpper)     # Guardar la funcion en "memoria" (en el arbol)
-    # ToLower
+    # ~~~~~~~~  ToLower ~~~~~~~~
     nombre = "tolower"
     parametros = [{'tipo':TIPO.CADENA, 'identificador':'toLower##Param1'}]
     instrucciones = []
     toLower = ToLower(nombre, parametros, instrucciones, -1, -1)
     ast.addFuncion(toLower)     # Guardar la funcion en "memoria" (en el arbol)
-
+    # ~~~~~~~~  Truncate ~~~~~~~~
+    nombre = "truncate"
+    parametros = [{'tipo':TIPO.DECIMAL, 'identificador':'truncate##Param1'}]
+    instrucciones = []
+    truncate = Truncate(nombre, parametros, instrucciones, -1, -1)
+    ast.addFuncion(truncate)     # Guardar la funcion en "memoria" (en el arbol)
+    
 # INTERFAZ
 def analizar(entrada):
     # f = open("./entrada.txt", "r")
