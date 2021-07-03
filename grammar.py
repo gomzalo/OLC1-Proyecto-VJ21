@@ -16,6 +16,9 @@
 # ********************************************************
 # ******************       LEXICO      *******************
 # ********************************************************
+from Nativas.TypeOf import TypeOf
+from Nativas.Round import Round
+from Nativas.Length import Length
 from Nativas.Truncate import Truncate
 from Nativas.ToLower import ToLower
 from Nativas.ToUpper import ToUpper
@@ -685,7 +688,24 @@ def crearNativas(ast):
     instrucciones = []
     truncate = Truncate(nombre, parametros, instrucciones, -1, -1)
     ast.addFuncion(truncate)     # Guardar la funcion en "memoria" (en el arbol)
-    
+    # ~~~~~~~~  Length ~~~~~~~~
+    nombre = "length"
+    parametros = [{'tipo':TIPO.CADENA, 'identificador':'length##Param1'}]
+    instrucciones = []
+    length = Length(nombre, parametros, instrucciones, -1, -1)
+    ast.addFuncion(length)     # Guardar la funcion en "memoria" (en el arbol)
+    # ~~~~~~~~  Round ~~~~~~~~
+    nombre = "round"
+    parametros = [{'tipo':TIPO.DECIMAL, 'identificador':'round##Param1'}]
+    instrucciones = []
+    round = Round(nombre, parametros, instrucciones, -1, -1)
+    ast.addFuncion(round)     # Guardar la funcion en "memoria" (en el arbol)
+    # ~~~~~~~~  TypeOf ~~~~~~~~
+    nombre = "typeof"
+    parametros = [{'identificador':'typeof##Param1'}]
+    instrucciones = []
+    typeOf = TypeOf(nombre, parametros, instrucciones, -1, -1)
+    ast.addFuncion(typeOf)     # Guardar la funcion en "memoria" (en el arbol)
 # INTERFAZ
 def analizar(entrada):
     # f = open("./entrada.txt", "r")

@@ -13,10 +13,13 @@ class ToUpper(Funcion):
         
     def interpretar(self, tree, table):
         simbolo = table.getTabla("toUpper##Param1")
-        if simbolo == None : return Excepcion("Semantico", "No se encontró el parámetro de ToUpper.", self.fila, self.columna)
+        print("valor: " + str(simbolo.getValor()))
+        print("tipo: " + str(simbolo.getTipo()))
         
+        if simbolo == None : return Excepcion("Semantico", "No se encontró el parámetro de ToUpper.", self.fila, self.columna)
+        # print(simbolo.getTipo())
         if simbolo.getTipo() != TIPO.CADENA:
             return Excepcion("Semantico", "Tipo de parámetro de ToUpper, no es una cadena.", self.fila, self.columna)
-        
-        self.tipo = simbolo.getTipo()
-        return simbolo.getValor().upper()
+        else:        
+            self.tipo = simbolo.getTipo()
+            return simbolo.getValor().upper()

@@ -156,9 +156,9 @@ main(){
     print(trunquito)
     var trunquito1 = truncate(trunquito)
     print(trunquito1)
-    Var trunkado = 4
-    var trunka2 = truncate(trunkado)
-    print(trunka2)
+#    Var trunkado = 4
+ #   var trunka2 = truncate(trunkado)
+ #   print(trunka2)
     
 }
 

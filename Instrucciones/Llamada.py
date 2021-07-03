@@ -24,15 +24,26 @@ class Llamada(Instruccion):
             for expresion in self.parametros: # Se obtiene el valor del parametro en la llamada
                 resultExpresion = expresion.interpretar(tree, table)
                 if isinstance(resultExpresion, Excepcion): return resultExpresion
-                
-                if result.parametros[contador]["tipo"] == expresion.tipo: # Verificacion de tipo
-                    # Creacion de simbolo e ingresarlo a la tabla de simbolos
-                    simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), result.parametros[contador]['tipo'], self.fila, self.columna, resultExpresion)
+                # print(expresion.tipo)
+                # ::::::::::::   Verificando si son nativas     ::::::::::::
+                if str(result.parametros[contador]['identificador']) == "typeof##Param1":
+                    
+                    simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), expresion.tipo, self.fila, self.columna, resultExpresion)
+                    # print(simbolo.getID())                        
                     resultTabla = nuevaTabla.setTabla(simbolo)
                     if isinstance(resultTabla, Excepcion): return resultTabla
-                    
+                # ::::::::::::   Funciones normales     ::::::::::::
                 else:
-                    return Excepcion("Semantico", "Tipo de dato diferente en parametros de la llamada.", self.fila, self.columna)
+                    if result.parametros[contador]["tipo"] == expresion.tipo: # Verificacion de tipo
+                        # Creacion de simbolo e ingresarlo a la tabla de simbolos
+                        simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), result.parametros[contador]['tipo'], self.fila, self.columna, resultExpresion)
+                        # print(simbolo.getID())                        
+                        resultTabla = nuevaTabla.setTabla(simbolo)
+                        if isinstance(resultTabla, Excepcion): return resultTabla
+                        
+                    else:
+                        return Excepcion("Semantico", "Tipo de dato diferente en parametros de la llamada.", self.fila, self.columna)
+                
                 contador += 1
                 
         else:
