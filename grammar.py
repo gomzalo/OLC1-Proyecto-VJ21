@@ -16,6 +16,8 @@
 # ********************************************************
 # ******************       LEXICO      *******************
 # ********************************************************
+from Abstract.NodoAST import NodoAST
+from Expresiones.Read import Read
 from Nativas.TypeOf import TypeOf
 from Nativas.Round import Round
 from Nativas.Length import Length
@@ -25,6 +27,7 @@ from Nativas.ToUpper import ToUpper
 import re
 from TS.Excepcion import Excepcion
 import sys
+import os
 
 sys.setrecursionlimit(3000)
 
@@ -51,7 +54,8 @@ reservadas = {
     'default'   : 'RDEFAULT',
     'main'      : 'RMAIN',
     'func'      : 'RFUNC',
-    'return'    : 'RRETURN'
+    'return'    : 'RRETURN',
+    'read'      : 'RREAD'
 }
 
 tokens = [
@@ -248,6 +252,7 @@ from Instrucciones.Decremento import Decremento
 from Instrucciones.Switch import Switch
 from Instrucciones.Case import Case
 from Instrucciones.Return import Return
+from Expresiones.Casteo import Casteo
 
 # -------------     Definicion de la gramatica      -------------
 
@@ -626,6 +631,14 @@ def p_expresion_false(t):
     '''expresion : RFALSE'''
     t[0] = Primitivos(TIPO.BOOLEANO, False, t.lineno(1), find_column(input, t.slice[1]))
 
+def p_expresion_read(t):
+    '''expresion : RREAD PARA PARC'''
+    t[0] = Read(t.lineno(1), find_column(input, t.slice[1]))
+
+def p_expresion_cast(t):
+    '''expresion : PARA tipo PARC expresion'''
+    t[0] = Casteo(t[2], t[4], t.lineno(1), find_column(input, t.slice[1]))
+
 #///////////////////////////////////////ERROR//////////////////////////////////////////////////
 
 def p_error(t):
@@ -675,7 +688,7 @@ def parse(inp):
 def crearNativas(ast):
     # ~~~~~~~~  ToUpper ~~~~~~~~
     nombre = "toupper"
-    parametros = [{'tipo':TIPO.CADENA, 'identificador':'toUpper##Param1'}]
+    parametros = [{'identificador':'toUpper##Param1'}]
     instrucciones = []
     toUpper = ToUpper(nombre, parametros, instrucciones, -1, -1)
     ast.addFuncion(toUpper)     # Guardar la funcion en "memoria" (en el arbol)
@@ -778,6 +791,22 @@ def analizar(entrada):
             err = Excepcion("Semantico", "¡Sentencias fuera de función Main!", instruccion.fila, instruccion.columna)
             ast.getExcepciones().append(err)
             ast.updateConsola(err.toString())
+
+    init = NodoAST("RAIZ")
+    instr = NodoAST("INSTRUCCIONES")
+    
+    for instruccion in ast.getInstrucciones():
+        instr.agregarHijoNodo(instruccion.getNodo())
+        
+    init.agregarHijoNodo(instr)
+    grafo = ast.getDot(init) # Devuelve el codigo de graphviz del AST
+    
+    dirname = os.path.dirname(__file__)
+    direc = os.path.join(dirname, 'ast.dot')
+    arch = open(direc, "w+")
+    arch.write(grafo)
+    arch.close()
+    os.system('dot -T pdf -o ast.pdf ast.dot')
 
     print(ast.getConsola())
     return ast

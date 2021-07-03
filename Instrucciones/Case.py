@@ -1,3 +1,4 @@
+from Abstract.NodoAST import NodoAST
 from Abstract.Instruccion import Instruccion
 from TS.Excepcion import Excepcion
 from TS.Tipo import TIPO
@@ -33,3 +34,10 @@ class Case(Instruccion):
                 # return result
         else:
             return Excepcion("Semantico", "Dato nulo en CASE.", self.fila, self.columna)
+
+    def getNodo(self):
+        nodo = NodoAST("CASE")
+        nodo.agregarHijo(str(self.condicion))
+        nodo.agregarHijo(str(self.instrucciones))
+        nodo.agregarHijoNodo(self.expresion.getNodo())
+        return nodo

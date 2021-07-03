@@ -20,6 +20,6 @@ class ToUpper(Funcion):
         # print(simbolo.getTipo())
         if simbolo.getTipo() != TIPO.CADENA:
             return Excepcion("Semantico", "Tipo de parámetro de ToUpper, no es una cadena.", self.fila, self.columna)
-        else:        
+        else:
             self.tipo = simbolo.getTipo()
             return simbolo.getValor().upper()

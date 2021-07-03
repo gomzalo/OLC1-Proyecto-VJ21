@@ -1,9 +1,11 @@
+from Abstract.NodoAST import NodoAST
 from TS.Simbolo import Simbolo
 from Instrucciones.Funcion import Funcion
 from Abstract.Instruccion import Instruccion
 from TS.Excepcion import Excepcion
 from TS.TablaSimbolos import TablaSimbolos
 from Instrucciones.Break import Break
+from TS.Tipo import TIPO
 
 
 class Llamada(Instruccion):
@@ -27,10 +29,18 @@ class Llamada(Instruccion):
                 # print(expresion.tipo)
                 # ::::::::::::   Verificando si son nativas     ::::::::::::
                 if str(result.parametros[contador]['identificador']) == "typeof##Param1":
-                    
+                    print("Entro a nativa :v")
                     simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), expresion.tipo, self.fila, self.columna, resultExpresion)
                     # print(simbolo.getID())                        
                     resultTabla = nuevaTabla.setTabla(simbolo)
+                    if isinstance(resultTabla, Excepcion): return resultTabla
+                elif str(result.parametros[contador]['identificador']) == "toUpper##Param1":
+                    print("Entro a nativa :v")
+                    simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), expresion.tipo, self.fila, self.columna, resultExpresion)
+                    # print(simbolo.getID())                        
+                    resultTabla = nuevaTabla.setTabla(simbolo)
+                    # if expresion.tipo != TIPO.CADENA:
+                    #     return Excepcion("Semantico", "Tipo de parámetro de ToUpper, no es una cadena.", self.fila, self.columna)
                     if isinstance(resultTabla, Excepcion): return resultTabla
                 # ::::::::::::   Funciones normales     ::::::::::::
                 else:
@@ -54,3 +64,12 @@ class Llamada(Instruccion):
         self.tipo = result.tipo
 
         return value
+    
+    def getNodo(self):
+        nodo = NodoAST("LLAMADA A FUNCION")
+        nodo.agregarHijo(str(self.nombre))
+        parametros = NodoAST("PARAMETROS")
+        for param in self.parametros:
+            parametros.agregarHijoNodo(param.getNodo())
+        nodo.agregarHijoNodo(parametros)
+        return nodo

@@ -1,5 +1,5 @@
 main(){
-    
+    #*    
     var t = 3.22
     var t2 = truncate(t)
     print(t2)
@@ -9,15 +9,19 @@ main(){
     print(cadena)
     print(tam)
 
-    vAR mayus = toUpper("aaa")
+    vAR mayus = toUpper(3)
     print(mayus)
     
 
     var rnd = round(32.44)
-  var tipo_rnd = typeof(rnd)
+    var tipo_rnd = typeof(rnd)
     print(rnd)
-print(tipo_rnd)
-var tipo_cad = typeof(cadena)
-print(tipo_cad)
-print(typeof(t))
+    print(tipo_rnd)
+    var tipo_cad = typeof(cadena)
+    print(tipo_cad)
+    print(typeof(t))
+    *#
+
+    var lectura = read()
+    print(lectura)
 }

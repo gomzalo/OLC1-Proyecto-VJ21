@@ -1,3 +1,4 @@
+from Abstract.NodoAST import NodoAST
 from TS.Tipo import TIPO
 from TS.Excepcion import Excepcion
 from Abstract.Instruccion import Instruccion
@@ -34,3 +35,9 @@ class Incremento(Instruccion):
         else:
             return Excepcion("Semantico", "Tipo de dato no incrementable.", self.fila, self.columna)
         return None
+    
+    def getNodo(self):
+        nodo = NodoAST("DECREMENTO")
+        nodo.agregarHijo(str(self.identificador))
+        # nodo.agregarHijoNodo(self.expresion.getNodo())
+        return nodo

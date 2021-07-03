@@ -1,3 +1,4 @@
+from Abstract.NodoAST import NodoAST
 from Abstract.Instruccion import Instruccion
 from TS.Excepcion import Excepcion
 from TS.Tipo import TIPO
@@ -87,3 +88,21 @@ class Switch(Instruccion):
                     if isinstance(result_default, Continue): return result_default
         else:
             return Excepcion("Semantico", "Tipo de dato no booleano en SW.", self.fila, self.columna)
+        
+    def getNodo(self):
+        nodo = NodoAST("SWITCH")
+
+        # instruccionesSwCsDf = NodoAST("INSTRUCCIONES CASE_DF")
+        # for instr in self.instruccionesSwCsDf:
+        #     instruccionesSwCsDf.agregarHijoNodo(instr.getNodo())
+        # nodo.agregarHijoNodo(instruccionesSwCsDf)
+
+        # if self.instruccionesSwCs != None:
+        #     instruccionesSwCs = NodoAST("INSTRUCCIONES CASE")
+        #     for instr in self.instruccionesSwCs:
+        #         instruccionesSwCs.agregarHijoNodo(instr.getNodo())
+        #     nodo.agregarHijoNodo(instruccionesSwCs) 
+        # elif self.instruccionesSwDf != None:
+        #     nodo.agregarHijoNodo(self.instruccionesSwDf.getNodo())
+
+        return nodo

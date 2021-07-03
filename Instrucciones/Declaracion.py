@@ -1,3 +1,4 @@
+from Abstract.NodoAST import NodoAST
 from TS.Tipo import TIPO
 from TS.Excepcion import Excepcion
 from Abstract.Instruccion import Instruccion
@@ -33,3 +34,10 @@ class Declaracion(Instruccion):
         if isinstance(result, Excepcion): return result
 
         return None
+    
+    def getNodo(self):
+        nodo = NodoAST("DECLARACION")
+        # nodo.agregarHijo(str(self.tipo))
+        nodo.agregarHijo(str(self.identificador))
+        # nodo.agregarHijoNodo(self.expresion.getNodo())
+        return nodo

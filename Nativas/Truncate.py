@@ -31,4 +31,4 @@ class Truncate(Funcion):
                 
         
         self.tipo = simbolo.getTipo()
-        return round(simbolo.getValor())
+        return math.trunc(simbolo.getValor())
