@@ -17,7 +17,7 @@ class Funcion(Instruccion):
 
     def interpretar(self, tree, table):
         nuevaTabla = TablaSimbolos(table)
-        if len(self.instrucciones) > 1:
+        if len(self.instrucciones):
             for instruccion in self.instrucciones:  # REALIZAR LAS ACCIONES
                 value = instruccion.interpretar(tree, nuevaTabla)
                 if isinstance(value, Excepcion):
@@ -30,9 +30,9 @@ class Funcion(Instruccion):
                 if isinstance(value, Return):
                     self.tipo = value.tipo
                     return value.result
-        else:
-            # print("No hay instrucciones xd.")
-            err = Excepcion("Sintactico", "No viene ninguna instrucción dentro de la función.", self.fila, self.columna)
-            tree.getExcepciones().append(err)
-            tree.updateConsola(err.toString())
+        # else:
+        #     # print("No hay instrucciones xd.")
+        #     err = Excepcion("Sintactico", "No viene ninguna instrucción dentro de la función.", self.fila, self.columna)
+        #     tree.getExcepciones().append(err)
+        #     tree.updateConsola(err.toString())
         return None

@@ -1,6 +1,6 @@
 main(){
     
-    #*
+    
     print("----------------CICLO WHILE Y FOR---------------");
     var numeroFactorial = 6;
     while (numeroFactorial > -1) {
@@ -21,9 +21,9 @@ main(){
         print(cadena1);
         numeroFactorial--;
     }
-    *#
+    
 
-    #*
+    
     print("-----------------WHILE ANIDADO------------------");
     var iii = 0;
     var nump = 8;
@@ -40,7 +40,7 @@ main(){
         iii = iii + 1;
     }
     print("Si la figura es un triangulo de numeros :3");
-    *#
+    
     
     print("------------------------------------------------");
 

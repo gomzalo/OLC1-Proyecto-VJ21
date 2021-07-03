@@ -19,7 +19,7 @@ var global_cad = "cadena" # Declara una variable de tipo string
 var GlObAl_A;             # Error: La variable ya está definida
 var global_salto = "Cadena con\nsalto de línea";
 var global_barra = "Cadena con \\ barra invertida";
-var global_comilla_doble = "Cadena con comilla doble";
+var global_comilla_doble = "Cadena con \"comilla doble\"";
 var global_tab = "Cadena con \t tabulación";
 var global_comilla_simple = "Cadena con \'comilla simple\'";
 var var1 = 1;
@@ -214,11 +214,11 @@ main(){
 
   print("---------- COMPARACIONES MENOR QUE DE PRUEBA ----------");
   var meq_1 = global_int < 25;
-  print("menor que = " + meq_1); # Menor que de enteros "menor que = true"
+  print("menor que = " + meq_1); # Menor que de enteros "menor que = false"
   var meq_2 = global_dou < 20;
   print("menor que = " + meq_2); # Menor que de doubles "menor que = false"
   var meq_3 = global_boo < true;
-  print("menor que = " + meq_3); # Menor que de booleanos "menor que = true"
+  print("menor que = " + meq_3); # Menor que de booleanos "menor que = false"
 
   print("---------- COMPARACIONES MENOR O IGUAL QUE DE PRUEBA ----------");
   var mei_1 = global_int <= 25;
