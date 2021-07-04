@@ -1,4 +1,4 @@
 import sys
 print(sys.getrecursionlimit())
-sys.setrecursionlimit(1500)
+sys.setrecursionlimit(3000)
 print(sys.getrecursionlimit())

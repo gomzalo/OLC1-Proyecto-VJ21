@@ -9,14 +9,14 @@ from tkinter import ttk
 import tkinter.font as font
 from TS.Arbol import Arbol
 from TS.TablaSimbolos import TablaSimbolos
-from grammar import analizar, getErrores, parse, errores
+from grammar import analizar, getErrores, parse, errores, debugger
 from TS.Excepcion import Excepcion
 window = Tk()
 
 archivo = ""
 varibale = "test"
 cont = -1
-
+contador = 0
 
 def salir(): 
     #print("Entre a salir"); 
@@ -275,6 +275,20 @@ def graficar_ast():
     dirname = os.path.dirname(__file__)
     direc = os.path.join(dirname, 'ast.pdf')
     os.system(direc)
+#Debugger
+
+def debug():
+    # global ast
+    global contador
+    print("contador window: " + str(contador))
+    ta_consola.config(state=NORMAL)
+    ta_consola.delete(1.0, END)
+    texto_obtenido = ta_editor.get("1.0", END)
+    ast = debugger(contador, texto_obtenido)
+    contador += 1
+    ta_consola.insert(END, ast.getConsola())
+    ta_consola.config(state=DISABLED)
+    
 
 # Window properties
 window.title("JPR")
@@ -332,7 +346,7 @@ boton_compilar = Button(window, width=15, height=2, text="Compilar", background 
 boton_compilar.place(x=350, y=655)
 boton_compilar['font'] = fuente_10
 # Siguiente button
-boton_seguir = Button(window, width=15, height=2, text="Siguiente", background = '#30243d', fg='#716c93')
+boton_seguir = Button(window, width=15, height=2, text="Siguiente", background = '#30243d', fg='#716c93', command =  debug)
 boton_seguir.place(x=910, y=655)
 boton_seguir['font'] = fuente_10
 # Labels
@@ -364,7 +378,7 @@ fileMenu.add_separator()
 
 menubar.add_cascade(label = "Herramientas", menu = fileMenu1)
 fileMenu1.add_command(label ="Interpretar", command = compilar, foreground='#bcb1c7', activeforeground='#5f5ba8')
-fileMenu1.add_command(label ="Debugger", foreground='#bcb1c7', activeforeground='#5f5ba8')
+fileMenu1.add_command(label ="Debugger", command =  debug, foreground='#bcb1c7', activeforeground='#5f5ba8')
 
 menubar.add_cascade(label = "Reportes", menu = fileMenu2, activeforeground='#5f5ba8')
 fileMenu2.add_command(label ="Reporte de Errores", command=errores, foreground='#bcb1c7', activeforeground='#5f5ba8')

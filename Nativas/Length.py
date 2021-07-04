@@ -15,8 +15,8 @@ class Length(Funcion):
         simbolo = table.getTabla("length##Param1")
         simbolo2 = table.getTabla(simbolo.getID())
         if simbolo == None : return Excepcion("Semantico", "No se encontró el parámetro de Length.", self.fila, self.columna)
-        print(self.instrucciones)
-        print(simbolo2.getArreglo())
+        # print(self.instrucciones)
+        # print(simbolo2.getArreglo())
         if simbolo2.getArreglo():
             self.tipo = simbolo.getTipo()
             return len(simbolo.getValor())

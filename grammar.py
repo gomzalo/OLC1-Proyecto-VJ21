@@ -730,6 +730,58 @@ def parse(inp):
     input = inp
     return parser.parse(inp)
 
+def debugger(contador, entrada):
+    from TS.Arbol import Arbol
+    from TS.TablaSimbolos import TablaSimbolos
+    
+    instrucciones = parse(entrada.lower()) # ARBOL AST
+    ast_deb = Arbol(instrucciones)
+    TSGlobal_deb = TablaSimbolos()
+    ast_deb.setTSglobal(TSGlobal_deb)
+    crearNativas(ast_deb)
+    # for error in errores:                   # CAPTURA DE ERRORES LEXICOS Y SINTACTICOS
+    #     ast.getExcepciones().append(error)
+    #     ast.updateConsola(error.toString())
+
+    if instrucciones == None:
+        return ast_deb
+    cont = 0
+    # print("tam_inst: " + str(instrucciones[0]))
+    # while ast_deb.getInstrucciones != None:
+    # instruccion = ast_deb.getInstrucciones()[0]
+    # print(instruccion)
+    print(contador)
+    for instruccion in ast_deb.getInstrucciones():
+        if isinstance(instruccion, Main):
+            cont += 1
+            if cont == 2:   # Verificando la duplicidad
+                err = Excepcion("Semantico", "Se encontraron 2 funciones Main.", instruccion.fila, instruccion.columna)
+                ast_deb.getExcepciones().append(err)
+                ast_deb.updateConsola(err.toString())
+                # break
+            value = instruccion.interpretar(ast_deb, TSGlobal_deb)
+            print("value: " + str(value))
+            if isinstance(value, Excepcion):
+                ast_deb.getExcepciones().append(value)
+                ast_deb.updateConsola(value.toString())
+                return value.toString()
+                break
+            if isinstance(value, Break):
+                err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", instruccion.fila, instruccion.columna)
+                ast_deb.getExcepciones().append(err)
+                ast_deb.updateConsola(err.toString())
+            if isinstance(value, Continue):
+                err = Excepcion("Semantico", "Sentencia CONTINUE fuera de ciclo", instruccion.fila, instruccion.columna)
+                ast_deb.getExcepciones().append(err)
+                ast_deb.updateConsola(err.toString())
+            if isinstance(value, Return):
+                err = Excepcion("Semantico", "Sentencia RETURN fuera de ciclo", instruccion.fila, instruccion.columna)
+                ast_deb.getExcepciones().append(err)
+                ast_deb.updateConsola(err.toString())
+        
+    print(ast_deb.getConsola())
+    return "sadfasd"
+
 # :::::::::     Creando funciones nativas   :::::::::
 # Creacion y declaracion de las funciones nativas
 def crearNativas(ast):
@@ -808,7 +860,6 @@ def analizar(entrada):
                 ast.updateConsola(err.toString())
     contador = 0
     for instruccion in ast.getInstrucciones():      # 2DA PASADA (Main)
-        
         if isinstance(instruccion, Main):
             contador += 1
             if contador == 2:   # Verificando la duplicidad
@@ -817,6 +868,7 @@ def analizar(entrada):
                 ast.updateConsola(err.toString())
                 break
             value = instruccion.interpretar(ast, TSGlobal)
+            # print("value 2da pasada: " + str(value))
             if isinstance(value, Excepcion):
                 ast.getExcepciones().append(value)
                 ast.updateConsola(value.toString())
@@ -839,6 +891,7 @@ def analizar(entrada):
             ast.getExcepciones().append(err)
             ast.updateConsola(err.toString())
 
+    # ~~~~~~~~~~~ Generando grafica AST ~~~~~~~~~~~
     init = NodoAST("RAIZ")
     instr = NodoAST("INSTRUCCIONES")
     
@@ -854,6 +907,7 @@ def analizar(entrada):
     arch.write(grafo)
     arch.close()
     # os.system('dot -T pdf -o ast.pdf ast.dot')
-
+    # ~~~~~~~~~~~ Generando grafica AST ~~~~~~~~~~~
+    
     print(ast.getConsola())
     return ast

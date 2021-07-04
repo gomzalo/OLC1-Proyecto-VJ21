@@ -26,7 +26,7 @@ class Casteo(Instruccion):
             # :::::::::::::::::::::::::::::::::::      Combinaciones CHARACTER      :::::::::::::::::::::::::::::::::::
             elif  self.expresion.tipo == TIPO.CHARACTER:
                 try:
-                    return float(self.obtenerVal(self.expresion.tipo, val))
+                    return float(ord(val))
                 except:
                     return Excepcion("Semantico", "No se puede castear para Double.", self.fila, self.columna)
             # :::::::::::::::::::::::::::::::::::      Combinaciones STRING      :::::::::::::::::::::::::::::::::::
@@ -56,7 +56,7 @@ class Casteo(Instruccion):
             # :::::::::::::::::::::::::::::::::::      Combinaciones CHARACTER      :::::::::::::::::::::::::::::::::::
             elif  self.expresion.tipo == TIPO.CHARACTER:
                 try:
-                    return int(self.obtenerVal(self.expresion.tipo, val))
+                    return int(ord(val))
                 except:
                     return Excepcion("Semantico", "No se puede castear para Int.", self.fila, self.columna)
             return Excepcion("Semantico", "Tipo Erroneo de casteo para Int.", self.fila, self.columna)
@@ -68,7 +68,7 @@ class Casteo(Instruccion):
             # :::::::::::::::::::::::::::::::::::      Combinaciones INT      :::::::::::::::::::::::::::::::::::
             if self.expresion.tipo == TIPO.ENTERO:
                 try:
-                    return ord(self.obtenerVal(self.expresion.tipo, val))
+                    return chr(self.obtenerVal(self.expresion.tipo, val))
                 except:
                     return Excepcion("Semantico", "No se puede castear para Char.", self.fila, self.columna)
             # :::::::::::::::::::::::::::::::::::      Combinaciones DOUBLE      :::::::::::::::::::::::::::::::::::

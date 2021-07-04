@@ -230,9 +230,18 @@ class Aritmetica(Instruccion):
 
     def obtenerVal(self, tipo, val):
         if tipo == TIPO.ENTERO:
-            return int(val)
+            try:
+                return int(val)
+            except:
+                print("No se pudo convertir a int")
         elif tipo == TIPO.DECIMAL:
-            return float(val)
+            try:
+                return float(val)
+            except:
+                print("No se pudo convertir a double")
         elif tipo == TIPO.BOOLEANO:
-            return bool(val)
+            try:
+                return bool(val)
+            except:
+                print("No se pudo convertir a bool")
         return str(val)

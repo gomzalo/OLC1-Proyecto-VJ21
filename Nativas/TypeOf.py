@@ -20,4 +20,8 @@ class TypeOf(Funcion):
         
         self.tipo = simbolo.getTipo()
         tipo = str(self.tipo).split('.')[1]
-        return str(tipo)
+        print(tipo)
+        try:
+            return str(tipo)
+        except:
+            return Excepcion("Semantico", "No se encontró el parámetro para TypeOf.", self.fila, self.columna)

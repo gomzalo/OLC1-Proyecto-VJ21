@@ -1,0 +1,5 @@
+    main(){
+        var t = 3.22
+        var t2 = truncate(t)
+        print(t2)    
+    }

@@ -648,7 +648,7 @@ main(){
   print("\n\tTYPE OF");
   var typeofStr = typeof ("hola");
   print("TypeOf STR :" + typeofStr);
-  var inputdou = typeof (8.25);
+  var inputdou = typeof(8.25);
   print("TypeOf DOUBLE :" + inputdou);
   var inputbool = typeof (False)
   print("TypeOf BOOL :" + inputbool);
@@ -686,6 +686,7 @@ main(){
         }
         num_while = num_while + 1;
     }
+  
 }
 func ackermann(int m, int n){
 #    contadorA = contadorA + 1;

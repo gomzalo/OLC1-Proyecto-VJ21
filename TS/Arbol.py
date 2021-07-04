@@ -58,13 +58,13 @@ class Arbol:
         self.dot += "\t\tn0[label=\"" + raiz.getValor().replace("\"", "\\\"") + "\"];\n"
         self.contador = 1
         self.recorrerAST("n0", raiz)
-        self.dot += "}"
+        self.dot += "\t}"
         return self.dot
     
     def recorrerAST(self, id_padre, nodo_padre):
         for hijo in nodo_padre.getHijos():
             nombre_hijo = "n" + str(self.contador)
-            self.dot += nombre_hijo + "\t\t[label=\"" + hijo.getValor().replace("\"", "\\\"") + "\"];\n"
+            self.dot += "\t\t" + nombre_hijo + "[label=\"" + hijo.getValor().replace("\"", "\\\"") + "\"];\n"
             self.dot += "\t\t" + id_padre + "->" + nombre_hijo + ";\n"
             self.contador += 1
             self.recorrerAST(nombre_hijo, hijo)

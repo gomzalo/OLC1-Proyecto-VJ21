@@ -15,9 +15,9 @@ class Truncate(Funcion):
     def interpretar(self, tree, table):
         simbolo = table.getTabla("truncate##Param1")
         if simbolo == None : return Excepcion("Semantico", "No se encontró el valor de truncate.", self.fila, self.columna)
-        print("truncateeee: \n")
-        print("tipo: " + str(simbolo.getTipo()))
-        print("val: " + str(simbolo.getValor()))
+        # print("truncateeee: \n")
+        # print("tipo: " + str(simbolo.getTipo()))
+        # print("val: " + str(simbolo.getValor()))
         if not(simbolo.getTipo() == TIPO.DECIMAL or simbolo.getTipo() == TIPO.ENTERO):
             # if simbolo.getTipo() == TIPO.ENTERO:
                 #     try:
@@ -34,4 +34,4 @@ class Truncate(Funcion):
                 
         
         self.tipo = simbolo.getTipo()
-        return math.trunc(simbolo.getValor())
+        return int(math.trunc(simbolo.getValor()))

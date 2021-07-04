@@ -1,0 +1,74 @@
+main(){
+    figura2
+}
+
+func figura2(){
+    var cadenaFigura = "";
+    var c = "* ";
+    var b = "  ";
+    var altura = 10;
+    var ancho = 1;
+    for (var i = 0; i < altura / 4; i++) {
+        for (var k = 0; k < altura - i; k++) {
+            cadenaFigura = cadenaFigura + b;
+        }
+        for (var j = 0; j < i * 2 + ancho; j++) {
+            cadenaFigura = cadenaFigura + c;
+        }
+
+        print(cadenaFigura);
+        cadenaFigura = "";
+    }
+    cadenaFigura = "";
+    for (var i = 0; i < altura / 4; i++) {
+        for (var k = 0; k < (altura - i) - 2; k++) {
+            cadenaFigura = cadenaFigura + b;
+        }
+        for (var j = 0; j < i * 2 + 5; j++) {
+            cadenaFigura = cadenaFigura + c;
+        }
+
+        print(cadenaFigura);
+        cadenaFigura = "";
+    }
+    cadenaFigura = "";
+    for (var i = 0; i < altura / 4; i++) {
+        for (var k = 0; k < (altura - i) - 4; k++) {
+            cadenaFigura = cadenaFigura + b;
+        }
+        for (var j = 0; j < i * 2 + 9; j++) {
+            cadenaFigura = cadenaFigura + c;
+        }
+
+        print(cadenaFigura);
+        cadenaFigura = "";
+    }
+
+    cadenaFigura = "";
+    for (var i = 0; i < altura / 4; i++) {
+        for (var k = 0; k < (altura - i) - 6; k++) {
+            cadenaFigura = cadenaFigura + b;
+        }
+        for (var j = 0; j < i * 2 + 13; j++) {
+            cadenaFigura = cadenaFigura + c;
+        }
+
+        print(cadenaFigura);
+        cadenaFigura = "";
+    }
+    cadenaFigura = "";
+    for (var i = 0; i < altura / 4; i++) {
+        for (var k = 0; k < altura - 2; k++) {
+            cadenaFigura = cadenaFigura + b;
+        }
+        for (var j = 0; j < 5; j++) {
+            cadenaFigura = cadenaFigura + c;
+        }
+
+        print(cadenaFigura);
+        cadenaFigura = "";
+    }
+
+    print("Si la figura es un Arbol +10 <3");
+
+}
