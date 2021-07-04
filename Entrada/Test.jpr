@@ -5,7 +5,7 @@
 
     main(){
         # NATIVAS
-#*        
+        
 var t = 3.22
         var t2 = truncate(t)
         print(t2)
@@ -26,10 +26,10 @@ var t = 3.22
         var tipo_cad = typeof(cadena)
         print(tipo_cad)
         print(typeof(t))
-*#        
+       
 
-#        var lectura = read()
-  #      print(lectura)
+        var lectura = read()
+      print(lectura)
 
         print("Posicion del arreglo 1 en la [0][0][0]: " + arr1[0][0][0]);
         print("Posicion del arreglo 1 en la [1][1][1]: " + arr1[1][1][1]);

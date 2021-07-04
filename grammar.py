@@ -853,7 +853,7 @@ def analizar(entrada):
     arch = open(direc, "w+")
     arch.write(grafo)
     arch.close()
-    os.system('dot -T pdf -o ast.pdf ast.dot')
+    # os.system('dot -T pdf -o ast.pdf ast.dot')
 
     print(ast.getConsola())
     return ast

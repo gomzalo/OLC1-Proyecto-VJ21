@@ -2,7 +2,12 @@
 from Abstract.NodoAST import NodoAST
 from Abstract.Instruccion import Instruccion
 from TS.Tipo import TIPO
+import tkinter as tk
+from tkinter import simpledialog
+import sys
 
+root = tk.Tk()
+root.withdraw()
 class Read(Instruccion):
     def __init__(self, fila, columna):
         self.fila = fila
@@ -14,10 +19,14 @@ class Read(Instruccion):
         print("Ingreso a READ.\nIngrese un valor: ")
         tree.setConsola("") # Reset consola
         # Ejemplo
-        lectura = input() # Obteniendo valor ingresado
+        # lectura = input() # Obteniendo valor ingresado
+     
+        lectura = simpledialog.askstring(title="Input", prompt="Ingresa un valor")
+        # self.master.wait_window(self.mw.top)
+        
         return lectura
     
     def getNodo(self):
         nodo = NodoAST("READ")
         return nodo
-        
+      

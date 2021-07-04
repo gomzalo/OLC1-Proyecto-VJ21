@@ -260,7 +260,7 @@ def compilar():
     ast = analizar(texto_obtenido)
     ta_consola.insert(END, ast.getConsola())
     ta_consola.config(state=DISABLED)
-
+#Errores
 def errores():
     if ast != None:
         ta_reporte_errores.config(state=NORMAL)
@@ -269,7 +269,12 @@ def errores():
             ta_reporte_errores.insert(END, error.toString())
             ta_reporte_errores.insert(END, "\n")
         ta_reporte_errores.config(state=DISABLED) 
-    
+#Graficar AST
+def graficar_ast():
+    os.system('dot -T pdf -o ast.pdf ast.dot')
+    dirname = os.path.dirname(__file__)
+    direc = os.path.join(dirname, 'ast.pdf')
+    os.system(direc)
 
 # Window properties
 window.title("JPR")
@@ -363,7 +368,7 @@ fileMenu1.add_command(label ="Debugger", foreground='#bcb1c7', activeforeground=
 
 menubar.add_cascade(label = "Reportes", menu = fileMenu2, activeforeground='#5f5ba8')
 fileMenu2.add_command(label ="Reporte de Errores", command=errores, foreground='#bcb1c7', activeforeground='#5f5ba8')
-fileMenu2.add_command(label ="Generar Arbol AST", foreground='#bcb1c7', activeforeground='#5f5ba8')
+fileMenu2.add_command(label ="Generar Arbol AST", command=graficar_ast, foreground='#bcb1c7', activeforeground='#5f5ba8')
 fileMenu2.add_command(label ="Reporte de Tabla de Simbolos", foreground='#bcb1c7', activeforeground='#5f5ba8')
 
 window.mainloop()
