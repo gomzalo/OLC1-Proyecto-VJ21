@@ -9,6 +9,7 @@ class Incremento(Instruccion):
         self.identificador = identificador
         self.fila = fila
         self.columna = columna
+        self.arreglo = False
 
     def interpretar(self, tree, table):
         value = None # Valor a asignar a la variable
@@ -26,7 +27,7 @@ class Incremento(Instruccion):
                 return value
             value = value + 1
             
-            simbolo = Simbolo(str(self.identificador), new_symbol.tipo, self.fila, self.columna, value)
+            simbolo = Simbolo(str(self.identificador), new_symbol.tipo, self.arreglo, self.fila, self.columna, value)
 
             result = table.actualizarTabla(simbolo)
             

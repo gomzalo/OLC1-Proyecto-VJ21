@@ -323,13 +323,13 @@ def p_imprimir(t):
 
 def p_declaracion(t) :
     'declaracion_instr     : RVAR ID IGUAL expresion'
-    # t[0] = Declaracion(t[2], TIPO.NULO, t.lineno(2), find_column(input, t.slice[2]), t[4])
-    t[0] = Declaracion(t[2], t.lineno(2), find_column(input, t.slice[2]), t[4])
+    t[0] = Declaracion(t[2], TIPO.NULO, t.lineno(2), find_column(input, t.slice[2]), t[4])
+    # t[0] = Declaracion(t[2], t.lineno(2), find_column(input, t.slice[2]), t[4])
     
 def p_declaracion_1(t) :
     'declaracion_instr     : RVAR ID'
-    # t[0] = Declaracion(t[2], TIPO.NULO, t.lineno(2), find_column(input, t.slice[2]), None)
-    t[0] = Declaracion(t[2], t.lineno(2), find_column(input, t.slice[2]), None)
+    t[0] = Declaracion(t[2], TIPO.NULO, t.lineno(2), find_column(input, t.slice[2]), None)
+    # t[0] = Declaracion(t[2], t.lineno(2), find_column(input, t.slice[2]), None)
 
 #///////////////////////////////////////DECLARACION ARREGLOS//////////////////////////////////////////////////
 
@@ -735,37 +735,37 @@ def parse(inp):
 def crearNativas(ast):
     # ~~~~~~~~  ToUpper ~~~~~~~~
     nombre = "toupper"
-    parametros = [{'identificador':'toUpper##Param1'}]
+    parametros = [{'tipo':TIPO.ANY, 'identificador':'toUpper##Param1'}]
     instrucciones = []
     toUpper = ToUpper(nombre, parametros, instrucciones, -1, -1)
     ast.addFuncion(toUpper)     # Guardar la funcion en "memoria" (en el arbol)
     # ~~~~~~~~  ToLower ~~~~~~~~
     nombre = "tolower"
-    parametros = [{'tipo':TIPO.CADENA, 'identificador':'toLower##Param1'}]
+    parametros = [{'tipo':TIPO.ANY, 'identificador':'toLower##Param1'}]
     instrucciones = []
     toLower = ToLower(nombre, parametros, instrucciones, -1, -1)
     ast.addFuncion(toLower)     # Guardar la funcion en "memoria" (en el arbol)
     # ~~~~~~~~  Truncate ~~~~~~~~
     nombre = "truncate"
-    parametros = [{'tipo':TIPO.DECIMAL, 'identificador':'truncate##Param1'}]
+    parametros = [{'tipo':TIPO.ANY, 'identificador':'truncate##Param1'}]
     instrucciones = []
     truncate = Truncate(nombre, parametros, instrucciones, -1, -1)
     ast.addFuncion(truncate)     # Guardar la funcion en "memoria" (en el arbol)
     # ~~~~~~~~  Length ~~~~~~~~
     nombre = "length"
-    parametros = [{'tipo':TIPO.CADENA, 'identificador':'length##Param1'}]
+    parametros = [{'tipo':TIPO.ANY, 'identificador':'length##Param1'}]
     instrucciones = []
     length = Length(nombre, parametros, instrucciones, -1, -1)
     ast.addFuncion(length)     # Guardar la funcion en "memoria" (en el arbol)
     # ~~~~~~~~  Round ~~~~~~~~
     nombre = "round"
-    parametros = [{'tipo':TIPO.DECIMAL, 'identificador':'round##Param1'}]
+    parametros = [{'tipo':TIPO.ANY, 'identificador':'round##Param1'}]
     instrucciones = []
     round = Round(nombre, parametros, instrucciones, -1, -1)
     ast.addFuncion(round)     # Guardar la funcion en "memoria" (en el arbol)
     # ~~~~~~~~  TypeOf ~~~~~~~~
     nombre = "typeof"
-    parametros = [{'identificador':'typeof##Param1'}]
+    parametros = [{'tipo':TIPO.ANY, 'identificador':'typeof##Param1'}]
     instrucciones = []
     typeOf = TypeOf(nombre, parametros, instrucciones, -1, -1)
     ast.addFuncion(typeOf)     # Guardar la funcion en "memoria" (en el arbol)

@@ -27,33 +27,36 @@ class Llamada(Instruccion):
             for expresion in self.parametros: # Se obtiene el valor del parametro en la llamada
                 resultExpresion = expresion.interpretar(tree, table)
                 if isinstance(resultExpresion, Excepcion): return resultExpresion
-                # print(expresion.tipo)
-                # ::::::::::::   Verificando si son nativas     ::::::::::::
-                if str(result.parametros[contador]['identificador']) == "typeof##Param1":
-                    print("Entro a nativa :v")
-                    simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), self.arreglo, expresion.tipo, self.fila, self.columna, resultExpresion)
-                    # print(simbolo.getID())                        
-                    resultTabla = nuevaTabla.setTabla(simbolo)
-                    if isinstance(resultTabla, Excepcion): return resultTabla
-                elif str(result.parametros[contador]['identificador']) == "toUpper##Param1":
-                    print("Entro a nativa :v")
-                    simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), self.arreglo, expresion.tipo, self.fila, self.columna, resultExpresion)
-                    # print(simbolo.getID())                        
-                    resultTabla = nuevaTabla.setTabla(simbolo)
-                    # if expresion.tipo != TIPO.CADENA:
-                    #     return Excepcion("Semantico", "Tipo de parámetro de ToUpper, no es una cadena.", self.fila, self.columna)
-                    if isinstance(resultTabla, Excepcion): return resultTabla
-                # ::::::::::::   Funciones normales     ::::::::::::
-                else:
-                    if result.parametros[contador]["tipo"] == expresion.tipo: # Verificacion de tipo
-                        # Creacion de simbolo e ingresarlo a la tabla de simbolos
-                        simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), result.parametros[contador]['tipo'], self.arreglo, self.fila, self.columna, resultExpresion)
-                        # print(simbolo.getID())                        
-                        resultTabla = nuevaTabla.setTabla(simbolo)
-                        if isinstance(resultTabla, Excepcion): return resultTabla
-                        
+                # print("Tipo en llamada: " + str(expresion.tipo))
+                    # ::::::::::::   Verificando si son nativas     ::::::::::::
+                    # if str(result.parametros[contador]['identificador']) == "typeof##Param1":
+                    #     print("Entro a nativa :v")
+                    #     simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), self.arreglo, expresion.tipo, self.fila, self.columna, resultExpresion)
+                    #     # print(simbolo.getID())                        
+                    #     resultTabla = nuevaTabla.setTabla(simbolo)
+                    #     if isinstance(resultTabla, Excepcion): return resultTabla
+                    # elif str(result.parametros[contador]['identificador']) == "toUpper##Param1":
+                    #     print("Entro a nativa :v")
+                    #     simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), self.arreglo, expresion.tipo, self.fila, self.columna, resultExpresion)
+                    #     # print(simbolo.getID())                        
+                    #     resultTabla = nuevaTabla.setTabla(simbolo)
+                    #     # if expresion.tipo != TIPO.CADENA:
+                    #     #     return Excepcion("Semantico", "Tipo de parámetro de ToUpper, no es una cadena.", self.fila, self.columna)
+                    #     if isinstance(resultTabla, Excepcion): return resultTabla
+                # # ::::::::::::   Funciones normales     ::::::::::::
+                # else:
+                if result.parametros[contador]["tipo"] == expresion.tipo or result.parametros[contador]["tipo"] == TIPO.ANY: # Verificacion de tipo
+                    # Creacion de simbolo e ingresarlo a la tabla de simbolos
+                    if result.parametros[contador]["tipo"] == TIPO.ANY:
+                        simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), expresion.tipo, self.arreglo, self.fila, self.columna, resultExpresion)
                     else:
-                        return Excepcion("Semantico", "Tipo de dato diferente en parametros de la llamada.", self.fila, self.columna)
+                        simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), result.parametros[contador]['tipo'], self.arreglo, self.fila, self.columna, resultExpresion)
+                    # print(simbolo.getID())                        
+                    resultTabla = nuevaTabla.setTabla(simbolo)
+                    if isinstance(resultTabla, Excepcion): return resultTabla
+                    
+                else:
+                    return Excepcion("Semantico", "Tipo de dato diferente en parametros de la llamada.", self.fila, self.columna)
                 
                 contador += 1
                 

@@ -18,7 +18,7 @@ class Round(Funcion):
         if simbolo == None : return Excepcion("Semantico", "No se encontró el parámetro de Round.", self.fila, self.columna)
         # print(simbolo.getTipo())
         if simbolo.getTipo() != TIPO.DECIMAL:
-            return Excepcion("Semantico", "Tipo de parámetro de Round, no es una cadena.", self.fila, self.columna)
+            return Excepcion("Semantico", "Tipo de parámetro de Round, no es un decimal.", self.fila, self.columna)
         else:        
             self.tipo = simbolo.getTipo()
             val_original = simbolo.getValor()

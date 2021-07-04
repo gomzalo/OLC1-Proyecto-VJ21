@@ -4,8 +4,9 @@
     arr1[arr1[1][1][1]][arr1[1][1][1]][arr1[1][1][1]] = 1000 
 
     main(){
-        #*    
-        var t = 3.22
+        # NATIVAS
+#*        
+var t = 3.22
         var t2 = truncate(t)
         print(t2)
 
@@ -13,7 +14,7 @@
         var tam = length(cadena)
         print(cadena)
         print(tam)
-
+*#
         vAR mayus = toUpper(3)
         print(mayus)
         
@@ -25,13 +26,15 @@
         var tipo_cad = typeof(cadena)
         print(tipo_cad)
         print(typeof(t))
-        *#
+        
 
 #        var lectura = read()
   #      print(lectura)
 
         print("Posicion del arreglo 1 en la [0][0][0]: " + arr1[0][0][0]);
         print("Posicion del arreglo 1 en la [1][1][1]: " + arr1[1][1][1]);
+        #*
+        # CASTS
         print("\n::::::::::: TESTING CASTEOS ::::::::::::::::\n")
         # ...........   Declarando variables a castear  ...........
         var entero = 12
@@ -74,7 +77,6 @@
         print("--: boolean -> string")
         var bool_str = (string) booleano
         print(bool_str)
-        #*
         print("\t||||||||||||||| BOOLEANO |||||||||||||||: ")
         print("--: entero -> booleano")
         var ent_bool = (boolean) entero
@@ -88,7 +90,12 @@
         *#
 #        var tipo = typeof(str_ent)
   #     print(tipo)
-
+        print(typeof(arr1))
+        var cadena = "bicho siuuu"
+        var tam = length(cadena)
+        print(cadena)
+        print(tam)
+        print(length(arr1))
     }
 
     int[ ] arr1 = new int[4];
