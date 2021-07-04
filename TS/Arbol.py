@@ -49,8 +49,13 @@ class Arbol:
         
     def getDot(self, raiz): # Devuelve el string de la grafica en Graphviz
         self.dot = ""
-        self.dot += "digraph {\n"
-        self.dot += "n0[label=\"" + raiz.getValor().replace("\"", "\\\"") + "\"];\n"
+        self.dot += "\n\tdigraph {\n"
+        self.dot += "\n\t\tgraph[color = \"lightcyan:mistyrose\", fontcolor = \"darkslateblue\", fontname = serif, style = filled, label = \"Catedraticos\"];"
+        self.dot += "\n\t\tnode[shape = egg, style = filled, color = \"gray9\", fillcolor = navyblue, fontcolor = white, peripheries = 2];"
+        self.dot += "\n\t\tedge[color = \"deeppink:gray38:firebrick1\"];"
+        self.dot += "\n"
+        self.dot += "\n"
+        self.dot += "\t\tn0[label=\"" + raiz.getValor().replace("\"", "\\\"") + "\"];\n"
         self.contador = 1
         self.recorrerAST("n0", raiz)
         self.dot += "}"
@@ -59,7 +64,7 @@ class Arbol:
     def recorrerAST(self, id_padre, nodo_padre):
         for hijo in nodo_padre.getHijos():
             nombre_hijo = "n" + str(self.contador)
-            self.dot += nombre_hijo + "[label=\"" + hijo.getValor().replace("\"", "\\\"") + "\"];\n"
-            self.dot += id_padre + "->" + nombre_hijo + ";\n"
+            self.dot += nombre_hijo + "\t\t[label=\"" + hijo.getValor().replace("\"", "\\\"") + "\"];\n"
+            self.dot += "\t\t" + id_padre + "->" + nombre_hijo + ";\n"
             self.contador += 1
             self.recorrerAST(nombre_hijo, hijo)
