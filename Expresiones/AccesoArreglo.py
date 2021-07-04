@@ -23,7 +23,7 @@ class AccesoArreglo(Instruccion):
         
         if not simbolo.getArreglo():
             return Excepcion("Semantico", "Variable " + self.identificador + " no es un arreglo.", self.fila, self.columna)
-        
+        # print("AccArr: " + str(simbolo.getArreglo()))
         # Busqueda del arreglo
         value = self.buscarDimensiones(tree, table, copy.copy(self.expresiones), simbolo.getValor()) # Retorna el valor solcitado
         if isinstance(value, Excepcion): return value

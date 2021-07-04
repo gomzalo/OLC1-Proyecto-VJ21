@@ -18,7 +18,7 @@ class Truncate(Funcion):
         print("truncateeee: \n")
         print("tipo: " + str(simbolo.getTipo()))
         print("val: " + str(simbolo.getValor()))
-        if simbolo.getTipo() != TIPO.DECIMAL:
+        if not(simbolo.getTipo() == TIPO.DECIMAL or simbolo.getTipo() == TIPO.ENTERO):
             # if simbolo.getTipo() == TIPO.ENTERO:
                 #     try:
                 #         simbolo.setValor(float(int(simbolo.getValor())))

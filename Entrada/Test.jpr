@@ -14,7 +14,7 @@ var t = 3.22
         var tam = length(cadena)
         print(cadena)
         print(tam)
-*#
+
         vAR mayus = toUpper(3)
         print(mayus)
         
@@ -26,7 +26,7 @@ var t = 3.22
         var tipo_cad = typeof(cadena)
         print(tipo_cad)
         print(typeof(t))
-        
+*#        
 
 #        var lectura = read()
   #      print(lectura)
@@ -87,15 +87,16 @@ var t = 3.22
         print("--: string -> booleano")
         var str_bool = (boolean) str
         print(bool_str)
-        *#
-#        var tipo = typeof(str_ent)
-  #     print(tipo)
+        
+        var tipo = typeof(str_ent)
+        print(tipo)
         print(typeof(arr1))
         var cadena = "bicho siuuu"
         var tam = length(cadena)
         print(cadena)
         print(tam)
-        print(length(arr1))
+        *#
+        print(length(arr2))
     }
 
-    int[ ] arr1 = new int[4];
+    int[ ] arr2 = new int[4];

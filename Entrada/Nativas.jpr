@@ -19,7 +19,8 @@
         
         var rnd = round(32.44)
         var tipo_rnd = typeof(rnd)
-        print(round("aa"))
+        print(round(5))
+        print(truncate(4.33))
         print(rnd)
         print(tipo_rnd)
         var tipo_cad = typeof(cadena)

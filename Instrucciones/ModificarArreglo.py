@@ -29,6 +29,7 @@ class ModificarArreglo(Instruccion):
         if simbolo.getTipo() != self.valor.tipo:
             return Excepcion("Semantico", "Tipos de dato diferente en Modificacion de arreglo.", self.fila, self.columna)
         
+        # print("ModArr: " + str(simbolo.getArreglo()))
         # Busqueda del arreglo
         value = self.modificarDimensiones(tree, table, copy.copy(self.expresiones), simbolo.getValor(), value) # Retorna el valor solicitado
         if isinstance(value, Excepcion): return value

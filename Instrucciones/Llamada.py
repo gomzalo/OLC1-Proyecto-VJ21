@@ -28,6 +28,7 @@ class Llamada(Instruccion):
                 resultExpresion = expresion.interpretar(tree, table)
                 if isinstance(resultExpresion, Excepcion): return resultExpresion
                 # print("Tipo en llamada: " + str(expresion.tipo))
+                # print("valor en llamada: " + str(expresion.valor))
                     # ::::::::::::   Verificando si son nativas     ::::::::::::
                     # if str(result.parametros[contador]['identificador']) == "typeof##Param1":
                     #     print("Entro a nativa :v")
@@ -48,6 +49,7 @@ class Llamada(Instruccion):
                 if result.parametros[contador]["tipo"] == expresion.tipo or result.parametros[contador]["tipo"] == TIPO.ANY: # Verificacion de tipo
                     # Creacion de simbolo e ingresarlo a la tabla de simbolos
                     if result.parametros[contador]["tipo"] == TIPO.ANY:
+                        # print("llamada_arr: " + str(result.parametros))
                         simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), expresion.tipo, self.arreglo, self.fila, self.columna, resultExpresion)
                     else:
                         simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), result.parametros[contador]['tipo'], self.arreglo, self.fila, self.columna, resultExpresion)

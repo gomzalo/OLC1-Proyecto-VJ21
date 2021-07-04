@@ -26,6 +26,12 @@ class Simbolo:
     def setValor(self, valor):
         self.valor = valor
 
+    # def getTam(self):
+    #     try:
+    #         len(self.valor)
+    #     except:
+    #         print("No se puede obtener el tamaño")
+    
     def getFila(self):
         return self.fila
 
