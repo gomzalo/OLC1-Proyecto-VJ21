@@ -11,6 +11,7 @@ class Declaracion(Instruccion):
         self.expresion = expresion
         self.fila = fila
         self.columna = columna
+        self.arreglo = False
 
     def interpretar(self, tree, table):
         value = None
@@ -26,7 +27,7 @@ class Declaracion(Instruccion):
         # if self.tipo != self.expresion.tipo:
         #     return Excepcion("Semantico", "Tipo de dato diferente en Declaracion", self.fila, self.columna)
 
-        simbolo = Simbolo(str(self.identificador), tipo, self.fila, self.columna, value)
+        simbolo = Simbolo(str(self.identificador), tipo, self.arreglo, self.fila, self.columna, value)
         # simbolo = Simbolo(str(self.identificador), TIPO.NULO, self.fila, self.columna, value)
 
         result = table.setTabla(simbolo)

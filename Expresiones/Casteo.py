@@ -23,6 +23,12 @@ class Casteo(Instruccion):
                     return float(self.obtenerVal(self.expresion.tipo, val))
                 except:
                     return Excepcion("Semantico", "No se puede castear para Double.", self.fila, self.columna)
+            # :::::::::::::::::::::::::::::::::::      Combinaciones CHARACTER      :::::::::::::::::::::::::::::::::::
+            elif  self.expresion.tipo == TIPO.CHARACTER:
+                try:
+                    return float(self.obtenerVal(self.expresion.tipo, val))
+                except:
+                    return Excepcion("Semantico", "No se puede castear para Double.", self.fila, self.columna)
             # :::::::::::::::::::::::::::::::::::      Combinaciones STRING      :::::::::::::::::::::::::::::::::::
             elif self.expresion.tipo == TIPO.CADENA:
                 try:
@@ -62,7 +68,7 @@ class Casteo(Instruccion):
             # :::::::::::::::::::::::::::::::::::      Combinaciones INT      :::::::::::::::::::::::::::::::::::
             if self.expresion.tipo == TIPO.ENTERO:
                 try:
-                    return chr(self.obtenerVal(self.expresion.tipo, val))
+                    return ord(self.obtenerVal(self.expresion.tipo, val))
                 except:
                     return Excepcion("Semantico", "No se puede castear para Char.", self.fila, self.columna)
             # :::::::::::::::::::::::::::::::::::      Combinaciones DOUBLE      :::::::::::::::::::::::::::::::::::
@@ -84,7 +90,7 @@ class Casteo(Instruccion):
                 except:
                     return Excepcion("Semantico", "No se puede castear para String.", self.fila, self.columna)
             # :::::::::::::::::::::::::::::::::::      Combinaciones DOUBLE      :::::::::::::::::::::::::::::::::::
-            elif  self.expresion.tipo == TIPO.DOUBLE:
+            elif  self.expresion.tipo == TIPO.DECIMAL:
                 try:
                     return str(self.obtenerVal(self.expresion.tipo, val))
                 except:
@@ -96,6 +102,30 @@ class Casteo(Instruccion):
                 except:
                     return Excepcion("Semantico", "No se puede castear para String.", self.fila, self.columna)
             return Excepcion("Semantico", "Tipo Erroneo de casteo para String.", self.fila, self.columna)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        if self.tipo == TIPO.BOOLEANO:
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~     BOOLEANO    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # :::::::::::::::::::::::::::::::::::      Combinaciones INT      :::::::::::::::::::::::::::::::::::
+            if self.expresion.tipo == TIPO.ENTERO:
+                try:
+                    return bool(self.obtenerVal(self.expresion.tipo, val))
+                except:
+                    return Excepcion("Semantico", "No se puede castear para Booleano.", self.fila, self.columna)
+            # :::::::::::::::::::::::::::::::::::      Combinaciones DOUBLE      :::::::::::::::::::::::::::::::::::
+            elif  self.expresion.tipo == TIPO.DECIMAL:
+                try:
+                    return bool(self.obtenerVal(self.expresion.tipo, val))
+                except:
+                    return Excepcion("Semantico", "No se puede castear para Booleano.", self.fila, self.columna)
+            # :::::::::::::::::::::::::::::::::::      Combinaciones STRING      :::::::::::::::::::::::::::::::::::
+            elif  self.expresion.tipo == TIPO.CADENA:
+                try:
+                    return bool(self.obtenerVal(self.expresion.tipo, val))
+                except:
+                    return Excepcion("Semantico", "No se puede castear para Booleano.", self.fila, self.columna)
+            return Excepcion("Semantico", "Tipo Erroneo de casteo para Booleano.", self.fila, self.columna)
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     def getNodo(self):
         nodo = NodoAST("CASTEO")
@@ -110,6 +140,6 @@ class Casteo(Instruccion):
             return float(val)
         elif tipo == TIPO.BOOLEANO:
             return bool(val)
-        # elif tipo == TIPO.CHARACTER:
-        #     return chr(val)
+        elif tipo == TIPO.CHARACTER:
+            return chr(val)
         return str(val)
