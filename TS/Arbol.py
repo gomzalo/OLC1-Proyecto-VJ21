@@ -7,6 +7,9 @@ class Arbol:
         self.TSGlobal = None
         self.dot = ""
         self.contador = 0
+        self.posMain = 0
+        self.posInst_enMain= 0 
+        self.debug_EntMain = None
 
     def getInstrucciones(self):
         return self.instrucciones

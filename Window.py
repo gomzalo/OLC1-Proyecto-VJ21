@@ -277,19 +277,30 @@ def graficar_ast():
     os.system(direc)
 #Debugger
 
+ast_debuger = None
 def debug():
-    # global ast
+    global ast_debuger    # global ast
+    ast_debuger = None
     global contador
     # print("contador window: " + str(contador))
     ta_consola.config(state=NORMAL)
     ta_consola.delete(1.0, END)
     texto_obtenido = ta_editor.get("1.0", END)
-    debugger(texto_obtenido)
-    content = debug_btn(texto_obtenido)
+    ast_debuger = debugger(texto_obtenido)
     # contador += 1
-    ta_consola.insert(END, content)
+    # ta_consola.insert(END, content)
     ta_consola.config(state=DISABLED)
+
+def siguiente():
+    # print("contador window: " + str(contador))
+    ta_consola.config(state=NORMAL)
+    ta_consola.delete(1.0, END)
+    # texto_obtenido = ta_editor.get("1.0", END)
     
+    ast_next = debug_btn(ast_debuger)
+    # contador += 1
+    ta_consola.insert(END, ast_next.getConsola())
+    ta_consola.config(state=DISABLED)
 
 # Window properties
 window.title("JPR")
@@ -347,7 +358,7 @@ boton_compilar = Button(window, width=15, height=2, text="Compilar", background 
 boton_compilar.place(x=350, y=655)
 boton_compilar['font'] = fuente_10
 # Siguiente button
-boton_seguir = Button(window, width=15, height=2, text="Siguiente", background = '#30243d', fg='#716c93', command =  debug)
+boton_seguir = Button(window, width=15, height=2, text="Siguiente", background = '#30243d', fg='#716c93', command =  siguiente)
 boton_seguir.place(x=910, y=655)
 boton_seguir['font'] = fuente_10
 # Labels

@@ -927,12 +927,22 @@ pos_main = 0
 pos_deb = 0
 pos_actual = 0
 existe_main = False
+
+
+from TS.Arbol import Arbol
+from TS.TablaSimbolos import TablaSimbolos
+
 def debugger(entrada):
     global pos_main
     global existe_main
     global pos_actual
-    from TS.Arbol import Arbol
-    from TS.TablaSimbolos import TablaSimbolos
+    global pos_deb
+    
+    pos_main = 0
+    pos_deb = 0
+    pos_actual = 0
+    existe_main = False
+    
     instrucciones = parse(entrada.lower()) # ARBOL AST
     ast = Arbol(instrucciones)
     TSGlobal = TablaSimbolos()
@@ -962,33 +972,7 @@ def debugger(entrada):
                 ast.getExcepciones().append(err)
                 ast.updateConsola(err.toString())
     contador = 0
-    for instruccion in ast.getInstrucciones():      # 2DA PASADA (Main)
-        if isinstance(instruccion, Main):
-            
-            contador += 1
-            if contador == 2:   # Verificando la duplicidad
-                err = Excepcion("Semantico", "Se encontraron 2 funciones Main.", instruccion.fila, instruccion.columna)
-                ast.getExcepciones().append(err)
-                ast.updateConsola(err.toString())
-                
-                break
-            value = instruccion.interpretar(ast, TSGlobal)
-            # print("value 2da pasada: " + str(value))
-            if isinstance(value, Excepcion):
-                ast.getExcepciones().append(value)
-                ast.updateConsola(value.toString())
-            if isinstance(value, Break):
-                err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", instruccion.fila, instruccion.columna)
-                ast.getExcepciones().append(err)
-                ast.updateConsola(err.toString())
-            if isinstance(value, Continue):
-                err = Excepcion("Semantico", "Sentencia CONTINUE fuera de ciclo", instruccion.fila, instruccion.columna)
-                ast.getExcepciones().append(err)
-                ast.updateConsola(err.toString())
-            if isinstance(value, Return):
-                err = Excepcion("Semantico", "Sentencia RETURN fuera de ciclo", instruccion.fila, instruccion.columna)
-                ast.getExcepciones().append(err)
-                ast.updateConsola(err.toString())
+   
     for instruccion in ast.getInstrucciones():
         cont = 0
         if isinstance(instruccion, Main):
@@ -1004,32 +988,35 @@ def debugger(entrada):
                 pos_main = pos_actual
                 existe_main = True
         pos_actual += 1
+        print("posActual del main: " +  str(pos_main))
+        ast.posMain = pos_main
+        ast.posInst_enMain= 0 
+    return ast
             
     
-def debug_btn(entrada):
+def debug_btn(ast):
     global pos_deb
-    global pos_main
-    global existe_main
-    global pos_actual
-    from TS.Arbol import Arbol
-    from TS.TablaSimbolos import TablaSimbolos
     
-    instrucciones = parse(entrada.lower()) # ARBOL AST
-    ast = Arbol(instrucciones)
-    TSGlobal = TablaSimbolos()
-    ast.setTSglobal(TSGlobal)
-    crearNativas(ast)
-    ast = Arbol(instrucciones)
+    # instrucciones = parse(entrada.lower()) # ARBOL AST
+    # ast = Arbol(instrucciones)
+    # TSGlobal = TablaSimbolos()
+    # ast.setTSglobal(TSGlobal)
+    # crearNativas(ast)
+    # ast = Arbol(instrucciones)
     
+    print("btn next: posicion pos_deb: " +  str(ast.posInst_enMain))
+    print("btn next: posicion pos main: " +  str(ast.posMain ))
     
     if existe_main:
-        instr_main = ast.instrucciones[pos_main]
-        nuevaTabla = TablaSimbolos(TSGlobal)
+        instr_main = ast.instrucciones[ast.posMain ]
+        if ast.debug_EntMain == None:
+            
+            ast.debug_EntMain = TablaSimbolos(ast.TSGlobal)
         
-        if pos_actual < len(instr_main.instrucciones):
-            instruccion = instr_main.instrucciones[pos_actual]
-            value = instruccion.interpretar(ast, nuevaTabla)
-            print("debug: " + str(value))
+        if ast.posInst_enMain < len(instr_main.instrucciones):
+            instruccion = instr_main.instrucciones[ast.posInst_enMain]
+            value = instruccion.interpretar(ast, ast.debug_EntMain )
+            #print("debug: " + str(value))
             # print("MAIN", value)
             if isinstance(value, Excepcion):
                 ast.getExcepciones().append(value)
@@ -1038,6 +1025,7 @@ def debug_btn(entrada):
                 err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", value.fila, value.columna)
                 ast.getExcepciones().append(err)
                 ast.updateConsola(err.toString())
-            pos_deb += 1
-            
-            return str(value)
+            ast.posInst_enMain += 1
+    print(ast.getConsola())
+    return ast
+            #return str(value)
