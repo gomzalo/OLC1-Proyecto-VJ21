@@ -673,9 +673,10 @@ main(){
   while(num_while < 10){
         print("Iteracion -> " + (num_while + 1))
         if(num_while == 7){
+            num_while = num_while + 1;
             continue;
         }
-        num_while = num_while + 1;
+        
     }
   print("\n---------- BREAK ------------");	
   num_while = 0

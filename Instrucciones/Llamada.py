@@ -18,15 +18,28 @@ class Llamada(Instruccion):
 
     def interpretar(self, tree, table):
         result = tree.getFuncion(self.nombre.lower())  ## OBTENER LA FUNCION
+        
         if result == None:  # NO SE ENCONTRO LA FUNCION
             return Excepcion("Semantico", "NO SE ENCONTRO LA FUNCION: " + self.nombre, self.fila, self.columna)
         nuevaTabla = TablaSimbolos(tree.getTSGlobal())
+        
         # OBTENER PARAMETROS
         if len(result.parametros) == len(self.parametros): # LA CANTIDAD DE PARAMETROS ES LA ADECUADA
             contador = 0
+            # print("ll_slfP: " + str(self.parametros))
             for expresion in self.parametros: # Se obtiene el valor del parametro en la llamada
                 resultExpresion = expresion.interpretar(tree, table)
                 if isinstance(resultExpresion, Excepcion): return resultExpresion
+                result_id = result.parametros[contador]["identificador"] ## OBTENER INS
+                # print("ll_resExp: " + str(resultExpresion))
+                # print(type(result_id))
+                # Verificando si es arreglo
+                simb = table.getTabla(result_id)
+                # print("ll_resid: " + str(result_id))
+                # print("ll_simb: " + str(simb))
+                
+                # if simb.getArreglo():
+                #     self.arreglo = True
                 # print("Tipo en llamada: " + str(expresion.tipo))
                 # print("valor en llamada: " + str(expresion.valor))
                     # ::::::::::::   Verificando si son nativas     ::::::::::::

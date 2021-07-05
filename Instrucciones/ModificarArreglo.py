@@ -21,10 +21,10 @@ class ModificarArreglo(Instruccion):
         simbolo = table.getTabla(self.identificador.lower())
         
         if simbolo == None:
-            return Excepcion("Semantico", "Variable" + self.identificador + "no encontrada.", self.fila, self.columna)
+            return Excepcion("Semantico", "Variable: \'" + self.identificador + "\', no encontrada.", self.fila, self.columna)
         
         if not simbolo.getArreglo():
-            return Excepcion("Semantico", "Variable" + self.identificador + "no es un arreglo.", self.fila, self.columna)
+            return Excepcion("Semantico", "Variable: \'" + self.identificador + "\', no es un arreglo.", self.fila, self.columna)
         
         if simbolo.getTipo() != self.valor.tipo:
             return Excepcion("Semantico", "Tipos de dato diferente en Modificacion de arreglo.", self.fila, self.columna)
