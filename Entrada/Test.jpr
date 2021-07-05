@@ -27,10 +27,10 @@ var t = 3.22
         print(tipo_cad)
         print(typeof(t))
        
-
+#*
         var lectura = read()
       print(lectura)
-
+*#
         print("Posicion del arreglo 1 en la [0][0][0]: " + arr1[0][0][0]);
         print("Posicion del arreglo 1 en la [1][1][1]: " + arr1[1][1][1]);
         #*

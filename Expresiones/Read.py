@@ -17,13 +17,13 @@ class Read(Instruccion):
     def interpretar(self, tree, table):
         print(tree.getConsola()) # Imprime consola
         print("Ingreso a READ.\nIngrese un valor: ")
-        tree.setConsola("") # Reset consola
+        # tree.setConsola("") # Reset consola
         # Ejemplo
         # lectura = input() # Obteniendo valor ingresado
      
         lectura = simpledialog.askstring(title="Input", prompt="Ingresa un valor")
+        # tree.setConsola(lectura)
         # self.master.wait_window(self.mw.top)
-        
         return lectura
     
     def getNodo(self):

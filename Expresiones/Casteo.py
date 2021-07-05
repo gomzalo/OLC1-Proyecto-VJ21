@@ -122,7 +122,12 @@ class Casteo(Instruccion):
             # :::::::::::::::::::::::::::::::::::      Combinaciones STRING      :::::::::::::::::::::::::::::::::::
             elif  self.expresion.tipo == TIPO.CADENA:
                 try:
-                    return bool(self.obtenerVal(self.expresion.tipo, val))
+                    temp = str(self.getValor(self.expresion.tipo, val)).lower()
+                    if temp == "false":
+                        return False
+                    if temp == "true":
+                        return True
+                    #return bool(self.obtenerVal(self.expresion.tipo, val))
                 except:
                     return Excepcion("Semantico", "No se puede castear para Booleano.", self.fila, self.columna)
             return Excepcion("Semantico", "Tipo Erroneo de casteo para Booleano.", self.fila, self.columna)

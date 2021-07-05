@@ -25,23 +25,24 @@ class Llamada(Instruccion):
         
         # OBTENER PARAMETROS
         if len(result.parametros) == len(self.parametros): # LA CANTIDAD DE PARAMETROS ES LA ADECUADA
+            
             contador = 0
             # print("ll_slfP: " + str(self.parametros))
             for expresion in self.parametros: # Se obtiene el valor del parametro en la llamada
                 resultExpresion = expresion.interpretar(tree, table)
                 if isinstance(resultExpresion, Excepcion): return resultExpresion
-                result_id = result.parametros[contador]["identificador"] ## OBTENER INS
-                # print("ll_resExp: " + str(resultExpresion))
-                # print(type(result_id))
-                # Verificando si es arreglo
-                simb = table.getTabla(result_id)
-                # print("ll_resid: " + str(result_id))
-                # print("ll_simb: " + str(simb))
-                
-                # if simb.getArreglo():
-                #     self.arreglo = True
-                # print("Tipo en llamada: " + str(expresion.tipo))
-                # print("valor en llamada: " + str(expresion.valor))
+                # result_id = result.parametros[contador]["identificador"] ## OBTENER INS
+                    # print("ll_resExp: " + str(resultExpresion))
+                    # print(type(result_id))
+                    # Verificando si es arreglo
+                    # simb = table.getTabla(result_id)
+                    # print("ll_resid: " + str(result_id))
+                    # print("ll_simb: " + str(simb))
+                    
+                    # if simb.getArreglo():
+                    #     self.arreglo = True
+                    # print("Tipo en llamada: " + str(expresion.tipo))
+                    # print("valor en llamada: " + str(expresion.valor))
                     # ::::::::::::   Verificando si son nativas     ::::::::::::
                     # if str(result.parametros[contador]['identificador']) == "typeof##Param1":
                     #     print("Entro a nativa :v")
@@ -64,6 +65,13 @@ class Llamada(Instruccion):
                     if result.parametros[contador]["tipo"] == TIPO.ANY:
                         # print("llamada_arr: " + str(result.parametros))
                         simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), expresion.tipo, self.arreglo, self.fila, self.columna, resultExpresion)
+                        # print(str(result.parametros[contador]["identificador"]))
+                        print("nombre ll: " + str(self.nombre))
+                        # print("arr_ll: " + result.parametros[contador]["arreglo"])
+                        if(self.nombre == "length"):
+                            # print("id ll: " + str(table.getTabla(expresion.identificador).getArreglo()))
+                            if table.getTabla(expresion.identificador).getArreglo() != None:
+                                simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), expresion.tipo, True, self.fila, self.columna, resultExpresion)
                     else:
                         simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), result.parametros[contador]['tipo'], self.arreglo, self.fila, self.columna, resultExpresion)
                     # print(simbolo.getID())                        

@@ -46,7 +46,7 @@ class If(Instruccion):
                     result = self.elseIf.interpretar(tree, table)
                     if isinstance(result, Excepcion): return result
                     if isinstance(result, Break): return result
-                    if isinstance(result, Continue): return result
+                    if isinstance(result, Continue): return None
                     if isinstance(result, Return): return result
 
         else:

@@ -9,7 +9,7 @@ from tkinter import ttk
 import tkinter.font as font
 from TS.Arbol import Arbol
 from TS.TablaSimbolos import TablaSimbolos
-from grammar import analizar, getErrores, parse, errores, debugger
+from grammar import analizar, debug_btn, getErrores, parse, errores, debugger
 from TS.Excepcion import Excepcion
 window = Tk()
 
@@ -280,13 +280,14 @@ def graficar_ast():
 def debug():
     # global ast
     global contador
-    print("contador window: " + str(contador))
+    # print("contador window: " + str(contador))
     ta_consola.config(state=NORMAL)
     ta_consola.delete(1.0, END)
     texto_obtenido = ta_editor.get("1.0", END)
-    ast = debugger(contador, texto_obtenido)
-    contador += 1
-    ta_consola.insert(END, ast.getConsola())
+    debugger(texto_obtenido)
+    content = debug_btn(texto_obtenido)
+    # contador += 1
+    ta_consola.insert(END, content)
     ta_consola.config(state=DISABLED)
     
 

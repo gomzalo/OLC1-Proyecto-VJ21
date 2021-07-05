@@ -10,15 +10,18 @@ class Length(Funcion):
         self.fila = fila
         self.columna = columna
         self.tipo = TIPO.NULO
-        
+        self.arreglo = False
     def interpretar(self, tree, table):
         simbolo = table.getTabla("length##Param1")
-        simbolo2 = table.getTabla(simbolo.getID())
+        # simbolo2 = table.getTabla(simbolo.getID())
         if simbolo == None : return Excepcion("Semantico", "No se encontró el parámetro de Length.", self.fila, self.columna)
         # print(self.instrucciones)
         # print(simbolo2.getArreglo())
-        if simbolo2.getArreglo():
-            self.tipo = simbolo.getTipo()
+        self.arreglo = simbolo.getArreglo()
+        print("getarr length" + str(simbolo.getArreglo()))
+        if simbolo.getArreglo():
+            
+            # self.tipo = simbolo.getTipo()
             return len(simbolo.getValor())
         elif simbolo.getTipo() != TIPO.CADENA:
             return Excepcion("Semantico", "Tipo de parámetro de Length, no es una cadena o arreglo.", self.fila, self.columna)

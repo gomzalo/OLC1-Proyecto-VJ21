@@ -510,8 +510,17 @@ def p_parametros_2(t):
 #///////////////////////////////////////PARAMETRO//////////////////////////////////////////////////
     
 def p_parametro(t):
-    'parametro          : tipo ID'
-    t[0] = {'tipo':t[1], 'identificador':t[2]}
+    'parametro          : tipo lista_parametro ID'
+    t[0] = {'tipo':t[1], 'arreglo':t[2], 'identificador':t[3]}
+
+def p_lista_parametro(t):
+    'lista_parametro    : lista_Dim'
+    t[0] = t[1]
+    
+def p_lista_parametro(t):
+    'lista_parametro    : '
+    t[0] = None
+
 
 #///////////////////////////////////////LLAMADA A FUNCION//////////////////////////////////////////////////
 
@@ -690,9 +699,11 @@ def p_expresion_Arreglo(t):
 
 def p_error(t):
     if t:
+        # errores.append(Excepcion("Sintáctico","Error Sintáctico: " + str(t[1].value) , t.lineno(1), find_column(input, t.slice[1])))
         parser.errok()
     else:
         print("Error sintactico en EOF")
+        # t[0] = ""
 
 # def p_instruccion_error(t):
 #     'instruccion        : error PUNTOCOMA'
@@ -787,37 +798,37 @@ def debugger(contador, entrada):
 def crearNativas(ast):
     # ~~~~~~~~  ToUpper ~~~~~~~~
     nombre = "toupper"
-    parametros = [{'tipo':TIPO.ANY, 'identificador':'toUpper##Param1'}]
+    parametros = [{'tipo':TIPO.ANY, 'arreglo': None, 'identificador':'toUpper##Param1'}]
     instrucciones = []
     toUpper = ToUpper(nombre, parametros, instrucciones, -1, -1)
     ast.addFuncion(toUpper)     # Guardar la funcion en "memoria" (en el arbol)
     # ~~~~~~~~  ToLower ~~~~~~~~
     nombre = "tolower"
-    parametros = [{'tipo':TIPO.ANY, 'identificador':'toLower##Param1'}]
+    parametros = [{'tipo':TIPO.ANY, 'arreglo': None, 'identificador':'toLower##Param1'}]
     instrucciones = []
     toLower = ToLower(nombre, parametros, instrucciones, -1, -1)
     ast.addFuncion(toLower)     # Guardar la funcion en "memoria" (en el arbol)
     # ~~~~~~~~  Truncate ~~~~~~~~
     nombre = "truncate"
-    parametros = [{'tipo':TIPO.ANY, 'identificador':'truncate##Param1'}]
+    parametros = [{'tipo':TIPO.ANY, 'arreglo': None, 'identificador':'truncate##Param1'}]
     instrucciones = []
     truncate = Truncate(nombre, parametros, instrucciones, -1, -1)
     ast.addFuncion(truncate)     # Guardar la funcion en "memoria" (en el arbol)
     # ~~~~~~~~  Length ~~~~~~~~
     nombre = "length"
-    parametros = [{'tipo':TIPO.ANY, 'identificador':'length##Param1'}]
+    parametros = [{'tipo':TIPO.ANY, 'arreglo': None, 'identificador':'length##Param1'}]
     instrucciones = []
     length = Length(nombre, parametros, instrucciones, -1, -1)
     ast.addFuncion(length)     # Guardar la funcion en "memoria" (en el arbol)
     # ~~~~~~~~  Round ~~~~~~~~
     nombre = "round"
-    parametros = [{'tipo':TIPO.ANY, 'identificador':'round##Param1'}]
+    parametros = [{'tipo':TIPO.ANY, 'arreglo': None, 'identificador':'round##Param1'}]
     instrucciones = []
     round = Round(nombre, parametros, instrucciones, -1, -1)
     ast.addFuncion(round)     # Guardar la funcion en "memoria" (en el arbol)
     # ~~~~~~~~  TypeOf ~~~~~~~~
     nombre = "typeof"
-    parametros = [{'tipo':TIPO.ANY, 'identificador':'typeof##Param1'}]
+    parametros = [{'tipo':TIPO.ANY, 'arreglo': None, 'identificador':'typeof##Param1'}]
     instrucciones = []
     typeOf = TypeOf(nombre, parametros, instrucciones, -1, -1)
     ast.addFuncion(typeOf)     # Guardar la funcion en "memoria" (en el arbol)
@@ -911,3 +922,122 @@ def analizar(entrada):
     
     print(ast.getConsola())
     return ast
+
+pos_main = 0
+pos_deb = 0
+pos_actual = 0
+existe_main = False
+def debugger(entrada):
+    global pos_main
+    global existe_main
+    global pos_actual
+    from TS.Arbol import Arbol
+    from TS.TablaSimbolos import TablaSimbolos
+    instrucciones = parse(entrada.lower()) # ARBOL AST
+    ast = Arbol(instrucciones)
+    TSGlobal = TablaSimbolos()
+    ast.setTSglobal(TSGlobal)
+    crearNativas(ast)
+    for error in errores:                   # CAPTURA DE ERRORES LEXICOS Y SINTACTICOS
+        ast.getExcepciones().append(error)
+        ast.updateConsola(error.toString())
+
+    # if self.instrucciones == None:
+    #     return self.ast
+    
+    for instruccion in ast.getInstrucciones():      # 1RA PASADA (Declaraciones y asignaciones)
+        if isinstance(instruccion, Funcion):
+            ast.addFuncion(instruccion)  # GUARDAR LA FUNCION EN "MEMORIA" (EN EL ARBOL)
+        if isinstance(instruccion, Declaracion) or isinstance(instruccion, Asignacion) or isinstance(instruccion, DeclaracionArr1) or isinstance(instruccion, ModificarArreglo):
+            value = instruccion.interpretar(ast, TSGlobal)
+            if isinstance(value, Excepcion) :
+                ast.getExcepciones().append(value)
+                ast.updateConsola(value.toString())
+            if isinstance(value, Break):
+                err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", instruccion.fila, instruccion.columna)
+                ast.getExcepciones().append(err)
+                ast.updateConsola(err.toString())
+            if isinstance(value, Continue):
+                err = Excepcion("Semantico", "Sentencia CONTINUE fuera de ciclo", instruccion.fila, instruccion.columna)
+                ast.getExcepciones().append(err)
+                ast.updateConsola(err.toString())
+    contador = 0
+    for instruccion in ast.getInstrucciones():      # 2DA PASADA (Main)
+        if isinstance(instruccion, Main):
+            
+            contador += 1
+            if contador == 2:   # Verificando la duplicidad
+                err = Excepcion("Semantico", "Se encontraron 2 funciones Main.", instruccion.fila, instruccion.columna)
+                ast.getExcepciones().append(err)
+                ast.updateConsola(err.toString())
+                
+                break
+            value = instruccion.interpretar(ast, TSGlobal)
+            # print("value 2da pasada: " + str(value))
+            if isinstance(value, Excepcion):
+                ast.getExcepciones().append(value)
+                ast.updateConsola(value.toString())
+            if isinstance(value, Break):
+                err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", instruccion.fila, instruccion.columna)
+                ast.getExcepciones().append(err)
+                ast.updateConsola(err.toString())
+            if isinstance(value, Continue):
+                err = Excepcion("Semantico", "Sentencia CONTINUE fuera de ciclo", instruccion.fila, instruccion.columna)
+                ast.getExcepciones().append(err)
+                ast.updateConsola(err.toString())
+            if isinstance(value, Return):
+                err = Excepcion("Semantico", "Sentencia RETURN fuera de ciclo", instruccion.fila, instruccion.columna)
+                ast.getExcepciones().append(err)
+                ast.updateConsola(err.toString())
+    for instruccion in ast.getInstrucciones():
+        cont = 0
+        if isinstance(instruccion, Main):
+            existe_main = True
+            cont += 1
+            if cont >= 2:
+                err = Excepcion("Semantico", "Sentencia RETURN fuera de ciclo", instruccion.fila, instruccion.columna)
+                ast.getExcepciones().append(err)
+                ast.updateConsola(err.toString())
+                existe_main = False
+                break
+            if cont < 2:
+                pos_main = pos_actual
+                existe_main = True
+        pos_actual += 1
+            
+    
+def debug_btn(entrada):
+    global pos_deb
+    global pos_main
+    global existe_main
+    global pos_actual
+    from TS.Arbol import Arbol
+    from TS.TablaSimbolos import TablaSimbolos
+    
+    instrucciones = parse(entrada.lower()) # ARBOL AST
+    ast = Arbol(instrucciones)
+    TSGlobal = TablaSimbolos()
+    ast.setTSglobal(TSGlobal)
+    crearNativas(ast)
+    ast = Arbol(instrucciones)
+    
+    
+    if existe_main:
+        instr_main = ast.instrucciones[pos_main]
+        nuevaTabla = TablaSimbolos(TSGlobal)
+        
+        if pos_actual < len(instr_main.instrucciones):
+            instruccion = instr_main.instrucciones[pos_actual]
+            value = instruccion.interpretar(ast, nuevaTabla)
+            print("debug: " + str(value))
+            # print("MAIN", value)
+            if isinstance(value, Excepcion):
+                ast.getExcepciones().append(value)
+                ast.updateConsola(value.toString())
+            if isinstance(value, Break):
+                err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", value.fila, value.columna)
+                ast.getExcepciones().append(err)
+                ast.updateConsola(err.toString())
+            pos_deb += 1
+            
+            return str(value)
