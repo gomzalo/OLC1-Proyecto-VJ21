@@ -72,6 +72,9 @@ class Llamada(Instruccion):
                             # print("id ll: " + str(table.getTabla(expresion.identificador).getArreglo()))
                             if table.getTabla(expresion.identificador).getArreglo() != None:
                                 simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), expresion.tipo, True, self.fila, self.columna, resultExpresion)
+                        if(self.nombre == "typeof"):
+                            if table.getTabla(expresion.identificador).getArreglo() != None:
+                                simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), expresion.tipo, True, self.fila, self.columna, resultExpresion)
                     else:
                         simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), result.parametros[contador]['tipo'], self.arreglo, self.fila, self.columna, resultExpresion)
                     # print(simbolo.getID())                        

@@ -22,7 +22,7 @@ class Read(Instruccion):
         # lectura = input() # Obteniendo valor ingresado
      
         lectura = simpledialog.askstring(title="Input", prompt="Ingresa un valor")
-        # tree.setConsola(lectura)
+        tree.setConsola(lectura)
         # self.master.wait_window(self.mw.top)
         return lectura
     
